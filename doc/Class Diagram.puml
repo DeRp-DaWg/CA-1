@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Person {
+Id : Long
+E-mail : String
+firstName : String
+lastName : String
+}
+
+class PersonDTO {
+}
+
+class Hobby {
+}
+
+class Address {
+}
+
+class Phone {
+}
+
+class CityInfo {
+}
+
+class PersonFacade {
+}
+
+@enduml

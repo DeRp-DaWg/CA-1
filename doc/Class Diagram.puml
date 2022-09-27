@@ -1,29 +1,65 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class Person {
-Id : Long
-E-mail : String
-firstName : String
-lastName : String
+package entities {
+    class Person {
+    - id : Long
+    - e-mail : String
+    - firstName : String
+    - lastName : String
+    }
+
+    class Hobby {
+    - name : String
+    - description : String
+    }
+
+    class Address {
+    - street : String
+    - additionalInfo : String
+    }
+
+    class Phone {
+    - number : int
+    }
+
+    class CityInfo {
+    - zipCode : int
+    - city : String
+    }
 }
 
-class PersonDTO {
+package dtos {
+    class PersonDTO {
+    - id : Long
+    - e-mail : String
+    - firstName : String
+    - lastName : String
+    - phone : int
+    - description : String
+    - streeName : String
+    - streetInfo : String
+    }
 }
 
-class Hobby {
+package Facades {
+    class PersonFacade {
+    + createPerson()
+    + readPersonFromPhone()
+    + updatePerson()
+    + deletePersonFromPhone()
+    + readAllPersonsFromHobby()
+    + readAllPersonsFromCity()
+    + deleteAddress()
+    }
 }
 
-class Address {
-}
+Person "*" o-- "*" Hobby
+Person "*" o-- "1" Address
+Person "1" *-- "*" Phone
+Address "*" o-- "1" CityInfo
 
-class Phone {
-}
-
-class CityInfo {
-}
-
-class PersonFacade {
-}
+PersonFacade -- entities
+PersonFacade -- PersonDTO
 
 @enduml

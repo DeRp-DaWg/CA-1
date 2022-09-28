@@ -1,15 +1,12 @@
 package entities;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import java.util.Set;
+import javax.persistence.*;
 
 
 @Entity
-@NamedQuery(name = "RenameMe.deleteAllRows", query = "DELETE from Person")
+@NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,10 +18,12 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
-    
+    @ManyToOne
     private Address address;
-    private Hobby hobby;
-    private Phone phone;
+    @ManyToMany
+    private Set<Hobby> hobby;
+    @OneToMany(mappedBy = "person")
+    private Set<Phone> phone;
     
     public Person() {
     }

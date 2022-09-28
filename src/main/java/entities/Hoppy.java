@@ -9,7 +9,7 @@ import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
     @Entity
-    @NamedQuery(name = "" , query = "delete from Hoppy")
+    @NamedQuery(name = "RenameMe.deleteAllRows" , query = "DELETE from Hoppy")
     public class Hoppy implements Serializable{
 
         private  static  final long serialVersionUTD = 1L;

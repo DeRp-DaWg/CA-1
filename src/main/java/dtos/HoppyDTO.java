@@ -14,9 +14,9 @@ public class HoppyDTO {
     }
 
     public static List<HoppyDTO> getDtos(List<Hoppy> hoppies){
-        List<HoppyDTO> hoppyDTOS = new ArrayList();
-        hoppies.forEach(hoppy->hoppyDTOS.add(new HoppyDTO(hoppy)));
-        return hoppyDTOS;
+        List<HoppyDTO> hoppyDTOs = new ArrayList();
+        hoppies.forEach(hoppy->hoppyDTOs.add(new HoppyDTO(hoppy)));
+        return hoppyDTOs;
     }
     public HoppyDTO(Hoppy hoppy) {
         if(hoppy != null)

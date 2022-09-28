@@ -19,9 +19,9 @@ public class HoppyDTO {
         return hoppyDTOS;
     }
     public HoppyDTO(Hoppy hoppy) {
-        if(hoppy.getHoppy_name != null)
+        if(hoppy != null)
             this.hoppy_name = hoppy.getName();
-            this.hoppy_description = hoppy_description.getHoppy_description();
+            this.hoppy_description = hoppy.getDescription();
     }
 
     public String getHoppy_name(){return hoppy_name; }

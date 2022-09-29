@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
     @Entity
-    @NamedQuery(name = "Hoppy.deleteAllRows" , query = "DELETE from Hoppy")
-    public class Hoppy implements Serializable{
+    @NamedQuery(name = "Hoppy.deleteAllRows" , query = "DELETE from Hobby")
+    public class Hobby implements Serializable{
 
         private  static  final long serialVersionUTD = 1L;
 
@@ -20,10 +20,10 @@ import java.io.Serializable;
             private String description;
 
 
-        public Hoppy() {
+        public Hobby() {
         }
 
-        public Hoppy(String name, String description) {
+        public Hobby(String name, String description) {
             this.name = name;
             this.description = description;
         }

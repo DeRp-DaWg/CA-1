@@ -12,7 +12,7 @@ public class Phone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int number;
+    private String number;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="PERSON_ID")
     private Person person;
@@ -20,7 +20,7 @@ public class Phone implements Serializable {
     public Phone() {
     }
     
-    public Phone(int number) {
+    public Phone(String number) {
         this.number = number;
     }
     
@@ -32,11 +32,19 @@ public class Phone implements Serializable {
         this.id = id;
     }
     
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
     
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
+    }
+    
+    public Person getPerson() {
+        return person;
+    }
+    
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

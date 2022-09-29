@@ -11,20 +11,24 @@ package entities {
     }
 
     class Hobby {
+    - id : Long
     - name : String
     - description : String
     }
 
     class Address {
+    - id : Long
     - street : String
     - additionalInfo : String
     }
 
     class Phone {
+    - id : Long
     - number : int
     }
 
     class CityInfo {
+    - id : Long
     - zipCode : int
     - city : String
     }

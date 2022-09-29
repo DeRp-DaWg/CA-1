@@ -6,9 +6,12 @@ import dtos.PersonDTO;
 import utils.EMF_Creator;
 import facades.PersonFacade;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("xxx")
@@ -33,6 +36,14 @@ public class PersonResource {
         //System.out.println("--------------->"+count);
         return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
     }
+    // Waiting to be implemented - Claes
+//    @GET
+//    @Path("/phone/{number}")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response getByPhone(@PathParam("number") int phoneNumber) throws EntityNotFoundException {
+//        List<PersonDTO> p = new ArrayList<PersonDTO>(FACADE.getByPhone(phoneNumber));
+//        return Response.ok().entity(GSON.toJson(p)).build();
+//    }
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})

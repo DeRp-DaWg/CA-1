@@ -14,7 +14,7 @@ import java.io.Serializable;
         public boolean getHobby_name;
 
 
-        @Name
+
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             private String name;
             private String description;

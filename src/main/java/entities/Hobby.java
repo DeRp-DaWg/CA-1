@@ -2,8 +2,9 @@ package entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
-    @Entity
+@Entity
     @NamedQuery(name = "Hobby.deleteAllRows" , query = "DELETE from Hobby")
     public class Hobby implements Serializable{
 
@@ -13,10 +14,14 @@ import java.io.Serializable;
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
+
         public boolean getHobby_name;
-        
+
             private String name;
             private String description;
+
+            @ManyToMany
+            private Set<Person> person;
 
         public Hobby() {
         }

@@ -1,7 +1,5 @@
 package entities;
 
-import jdk.jfr.Name;
-
 import javax.persistence.*;
 import java.io.Serializable;
 

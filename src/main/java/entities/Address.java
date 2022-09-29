@@ -1,6 +1,8 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.*;
 
 
@@ -17,9 +19,13 @@ public class Address implements Serializable {
     private String additionalInfo;
     
     @ManyToOne
-    @JoinColumn(name="CITYINFO_ID")
+    @JoinColumn(name="cityinfo_id")
     private CityInfo cityInfo;
-    
+
+    @OneToMany
+    @JoinColumn(name="")
+    private Set<Person> person = new LinkedHashSet<>();
+
     public Address() {
     }
     

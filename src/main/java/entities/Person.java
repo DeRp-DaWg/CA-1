@@ -22,7 +22,7 @@ public class Person implements Serializable {
     private Address address;
     @ManyToMany
     private Set<Hobby> hobby;
-    @OneToMany(mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<Phone> phone;
     
     public Person() {

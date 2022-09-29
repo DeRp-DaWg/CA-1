@@ -9,6 +9,11 @@ import java.io.Serializable;
 
         private  static  final long serialVersionUTD = 1L;
 
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id", nullable = false)
+        private Long id;
+
         public boolean getHobby_name;
 
 
@@ -17,7 +22,6 @@ import java.io.Serializable;
             private String name;
             private String description;
 
-
         public Hobby() {
         }
 
@@ -25,6 +29,10 @@ import java.io.Serializable;
             this.name = name;
             this.description = description;
         }
+
+            public Long getId() {return id;}
+        
+            public void setId(Long id) {this.id = id;}
 
             public String getName () {
             return name;

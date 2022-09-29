@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 //import errorhandling.RenameMeNotFoundException;
+import entities.Phone;
 import utils.EMF_Creator;
 
 /**
@@ -74,7 +75,46 @@ public class PersonFacade {
 //            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
     }
-    
+
+    // Gets all persons with a given hobby xxxxx maybe
+    public List<PersonDTO> getByHobby(String hobby){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.hobby = :hobby", Person.class)
+                .setParameter("hobby", hobby);
+        List<Person> persons = query.getResultList();
+        List<PersonDTO> personDTOS = new ArrayList<>();
+        for (Person h : persons){
+            personDTOS.add(new PersonDTO(h));
+        }
+        return personDTOS;
+    }
+
+    //Get all persons living in a given city
+    public List<PersonDTO> getByAddress(String address){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query = em.createQuery("SELECT a FROM Address a WHERE a.adress = :adress", Person.class)
+                .setParameter("adress", address);
+        List<Person> persons = query.getResultList();
+        List<PersonDTO> personDTOS = new ArrayList<>();
+        for (Person a : persons){
+            personDTOS.add(new PersonDTO(a));
+        }
+        return personDTOS;
+    }
+    //Get the number of people with a given hobby
+
+
+    //
+    //Get a list of all zip codes in Denmark
+
+
+    //
+    //Create new Persons
+
+    //
+    //Edit Persons
+
+    //
     //TODO Remove/Change this before use
     public long getRenameMeCount(){
         EntityManager em = getEntityManager();

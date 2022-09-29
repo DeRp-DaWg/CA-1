@@ -6,12 +6,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 
     @Entity
-    @NamedQuery(name = "Hoppy.deleteAllRows" , query = "DELETE from Hobby")
+    @NamedQuery(name = "Hobby.deleteAllRows" , query = "DELETE from Hobby")
     public class Hobby implements Serializable{
 
         private  static  final long serialVersionUTD = 1L;
 
-        public boolean getHoppy_name;
+        public boolean getHobby_name;
 
 
         @Name

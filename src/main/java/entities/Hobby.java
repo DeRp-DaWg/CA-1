@@ -14,10 +14,7 @@ import java.io.Serializable;
         private Long id;
 
         public boolean getHobby_name;
-
-
-
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
+        
             private String name;
             private String description;
 

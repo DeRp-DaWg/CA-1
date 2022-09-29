@@ -21,6 +21,7 @@ public class Person implements Serializable {
     @ManyToOne
     private Address address;
     @ManyToMany
+    @JoinTable(name = "personhobby")
     private Set<Hobby> hobby;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<Phone> phone;
@@ -83,19 +84,19 @@ public class Person implements Serializable {
         this.address = address;
     }
     
-    public Hobby getHobby() {
+    public Set<Hobby> getHobby() {
         return hobby;
     }
     
-    public void setHobby(Hobby hobby) {
+    public void setHobby(Set<Hobby> hobby) {
         this.hobby = hobby;
     }
     
-    public Phone getPhone() {
+    public Set<Phone> getPhone() {
         return phone;
     }
     
-    public void setPhone(Phone phone) {
+    public void setPhone(Set<Phone> phone) {
         this.phone = phone;
     }
 }

@@ -5,10 +5,11 @@
  */
 package dtos;
 
+import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -20,20 +21,20 @@ public class PersonDTO {
     private String firstName;
     private String lastName;
     private String password;
-    private String phone;
-    private String description;
+    private Set<String> phone;
+    private Map<String, String> hobbies;
     private String streetName;
-    private String streetInfo;
+    private String streetAdditionalInfo;
     
-    public PersonDTO(String email, String firstName, String lastName, String password, String phone, String description, String streetName, String streetInfo) {
+    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Map<String, String> hobbies, String streetName, String streetAdditionalInfo) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.phone = phone;
-        this.description = description;
+        this.hobbies = hobbies;
         this.streetName = streetName;
-        this.streetInfo = streetInfo;
+        this.streetAdditionalInfo = streetAdditionalInfo;
     }
     
     public static List<PersonDTO> getDtos(List<Person> persons){
@@ -50,10 +51,16 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.password = person.getPassword();
-        this.phone = person.getPhone();
-        this.description = person.getDescription();
-        this.streetName = person.getStreetName();
-        this.streetInfo = person.getStreetInfo();
+        phone = new HashSet<>();
+        for (Phone p : person.getPhone()) {
+            phone.add(p.getNumber());
+        }
+        hobbies = new HashMap<>();
+        for (Hobby hobby : person.getHobby()) {
+            hobbies.put(hobby.getName(), hobby.getDescription());
+        }
+        this.streetName = person.getAddress().getStreet();
+        this.streetAdditionalInfo = person.getAddress().getAdditionalInfo();
     }
     
     public String getEmail() {
@@ -88,20 +95,20 @@ public class PersonDTO {
         this.password = password;
     }
     
-    public String getPhone() {
+    public Set<String> getPhone() {
         return phone;
     }
     
-    public void setPhone(String phone) {
+    public void setPhone(Set<String> phone) {
         this.phone = phone;
     }
     
-    public String getDescription() {
-        return description;
+    public Map<String, String> getHobbies() {
+        return hobbies;
     }
     
-    public void setDescription(String description) {
-        this.description = description;
+    public void setHobbies(Map<String, String> hobbies) {
+        this.hobbies = hobbies;
     }
     
     public String getStreetName() {
@@ -112,12 +119,12 @@ public class PersonDTO {
         this.streetName = streetName;
     }
     
-    public String getStreetInfo() {
-        return streetInfo;
+    public String getStreetAdditionalInfo() {
+        return streetAdditionalInfo;
     }
     
-    public void setStreetInfo(String streetInfo) {
-        this.streetInfo = streetInfo;
+    public void setStreetAdditionalInfo(String streetAdditionalInfo) {
+        this.streetAdditionalInfo = streetAdditionalInfo;
     }
     
     @Override
@@ -128,10 +135,10 @@ public class PersonDTO {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                ", description='" + description + '\'' +
+                ", phone=" + phone +
+                ", hobbies=" + hobbies +
                 ", streetName='" + streetName + '\'' +
-                ", streetInfo='" + streetInfo + '\'' +
+                ", streetAdditionalInfo='" + streetAdditionalInfo + '\'' +
                 '}';
     }
 }

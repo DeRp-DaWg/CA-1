@@ -24,7 +24,7 @@ package entities {
 
     class Phone {
     - id : Long
-    - number : int
+    - number : String
     }
 
     class CityInfo {
@@ -40,10 +40,10 @@ package dtos {
     - e-mail : String
     - firstName : String
     - lastName : String
-    - phone : int
-    - description : String
-    - streeName : String
-    - streetInfo : String
+    - phone : Set<String>
+    - hobbies : Map<String, String>
+    - streetName : String
+    - streetAdditionalInfo : String
     }
 }
 

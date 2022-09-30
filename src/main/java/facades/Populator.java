@@ -120,6 +120,15 @@ public class Populator {
             hobbies.add(dto);
         }
         fe.create(new PersonDTO("user@mail.dk", "Lars", "Jørgensen", "1234", phones, hobbies, "Østerbrogade 3", "1. th", 1, 1));
+        phones = new LinkedHashSet<>();
+        phones.add("27834091");
+        //Map<String, String> hobbies = new HashMap<>();
+//        hobbies.put("Fodbold", "Man sparker til en bold");
+        hobbies = new LinkedHashSet<>();
+        for(HobbyDTO dto : fe.getHobbies(2)){
+            hobbies.add(dto);
+        }
+        fe.create(new PersonDTO("user2@mail.dk", "Troels", "Sandfer", "1234", phones, hobbies, "Finsensvej", "5. tv", 5, 2));
 //        System.out.println(fe.getByPhone(67821902));
     }
     

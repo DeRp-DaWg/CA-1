@@ -50,13 +50,13 @@ public class PersonResource {
 //        return Response.ok().entity(GSON.toJson(p)).build();
 //    }
 
-//    @GET
-//    @Path("/phone")
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public Response getById(@PathParam("id") int id) throws EntityNotFoundException {
-//        List<PersonDTO> p = new ArrayList<>(FACADE.getByPhone(67821902));
-//        return Response.ok().entity(GSON.toJson(p)).build();
-//    }
+    @GET
+    @Path("/phone/{number}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getById(@PathParam("number") int number) throws EntityNotFoundException {
+        List<PersonDTO> p = new ArrayList<>(FACADE.getByPhone(number));
+        return Response.ok().entity(GSON.toJson(p)).build();
+    }
 
 //    @GET
 //    @Path("/phone")

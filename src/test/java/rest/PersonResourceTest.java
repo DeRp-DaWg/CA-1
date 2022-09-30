@@ -63,11 +63,11 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        r1 = new Person("Some txt", "More text");
-        r2 = new Person("aaa", "bbb");
+//        r1 = new Person("Some txt", "More text");
+//        r2 = new Person("aaa", "bbb");
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
+//            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
             em.persist(r1);
             em.persist(r2);
             em.getTransaction().commit();

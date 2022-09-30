@@ -17,10 +17,13 @@ public class Address implements Serializable {
     
     private String street;
     private String additionalInfo;
+
+    private int cityinfo_id;
     
-    @ManyToOne
-    @JoinColumn(name="cityinfo_id")
-    private CityInfo cityInfo;
+//    @ManyToOne
+//    @Where(clause = "")
+//    @JoinColumn(name="cityinfo_id")
+//    private CityInfo cityInfo;
 
     @OneToMany
     @JoinColumn(name="")
@@ -29,9 +32,10 @@ public class Address implements Serializable {
     public Address() {
     }
     
-    public Address(String street, String additionalInfo) {
+    public Address(String street, String additionalInfo, int cityinfo_id) {
         this.street = street;
         this.additionalInfo = additionalInfo;
+        this.cityinfo_id = cityinfo_id;
     }
     
     public Long getId() {

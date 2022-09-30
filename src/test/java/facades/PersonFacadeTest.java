@@ -39,9 +39,9 @@ public class PersonFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new Person("Some txt", "More text"));
-            em.persist(new Person("aaa", "bbb"));
+//            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
+//            em.persist(new Person("Some txt", "More text"));
+//            em.persist(new Person("aaa", "bbb"));
 
             em.getTransaction().commit();
         } finally {

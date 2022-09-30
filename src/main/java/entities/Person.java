@@ -1,6 +1,12 @@
 package entities;
 
+import dtos.HobbyDTO;
+import dtos.PersonDTO;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -18,22 +24,30 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
-    @ManyToOne
+
+    private int hobby_id;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
-    @ManyToMany
-    @JoinTable(name = "personhobby")
-    private Set<Hobby> hobby;
+//    @ManyToMany(cascade = CascadeType.PERSIST)
+//    @JoinTable(
+//            name = "personhobby",
+//            joinColumns = @JoinColumn(name = "person_id"),
+//            inverseJoinColumns = @JoinColumn(name = "hobby_id")
+//    )
+//    private Set<Hobby> hobby;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private Set<Phone> phone;
     
     public Person() {
     }
     
-    public Person(String email, String firstName, String lastName, String password) {
+    public Person(String email, String firstName, String lastName, String password, int hobby_id) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.hobby_id = hobby_id;
     }
     
     public Long getId() {
@@ -84,13 +98,13 @@ public class Person implements Serializable {
         this.address = address;
     }
     
-    public Set<Hobby> getHobby() {
-        return hobby;
-    }
-    
-    public void setHobby(Set<Hobby> hobby) {
-        this.hobby = hobby;
-    }
+//    public Set<Hobby> getHobby() {
+//        return hobby;
+//    }
+//
+//    public void setHobby(Set<Hobby> hobby) {
+//        this.hobby = hobby;
+//    }
     
     public Set<Phone> getPhone() {
         return phone;
@@ -99,4 +113,13 @@ public class Person implements Serializable {
     public void setPhone(Set<Phone> phone) {
         this.phone = phone;
     }
+
+    public int getHobby_id() {
+        return hobby_id;
+    }
+
+    public void setHobby_id(int hobby_id) {
+        this.hobby_id = hobby_id;
+    }
+
 }

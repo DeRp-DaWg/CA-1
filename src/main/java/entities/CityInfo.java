@@ -19,8 +19,8 @@ public class CityInfo { // zipcode: 2100, city: Østerbro
     @Column(name = "city")
     private String city;
 
-    @OneToMany(mappedBy = "cityInfo")
-    private Set<Address> addresses = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "cityInfo")
+//    private Set<Address> addresses = new LinkedHashSet<>();
 
     public CityInfo(){}
 
@@ -49,11 +49,11 @@ public class CityInfo { // zipcode: 2100, city: Østerbro
         this.city = city;
     }
 
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<Address> address) {
-        this.addresses = address;
-    }
+//    public Set<Address> getAddresses() {
+//        return addresses;
+//    }
+//
+//    public void setAddresses(Set<Address> address) {
+//        this.addresses = address;
+//    }
 }

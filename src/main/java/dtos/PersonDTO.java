@@ -22,11 +22,13 @@ public class PersonDTO {
     private String lastName;
     private String password;
     private Set<String> phone;
-    private Map<String, String> hobbies;
+//    private Map<String, String> hobbies;
+    private Set<HobbyDTO> hobbies;
     private String streetName;
     private String streetAdditionalInfo;
     
-    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Map<String, String> hobbies, String streetName, String streetAdditionalInfo) {
+    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Set<HobbyDTO> hobbies, String streetName, String streetAdditionalInfo) {
+        // Map<String, String> hobbies,
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,14 +39,15 @@ public class PersonDTO {
         this.streetAdditionalInfo = streetAdditionalInfo;
     }
     
-    public static List<PersonDTO> getDtos(List<Person> persons){
+    public static List<PersonDTO> getDtos(List<Person> persons, Set<HobbyDTO> hobbies){
         List<PersonDTO> personDTOs = new ArrayList();
-        persons.forEach(person->personDTOs.add(new PersonDTO(person)));
+        for(int i = 0; i < persons.size(); )
+        persons.forEach(person-> personDTOs.add(new PersonDTO(person)));
         return personDTOs;
     }
 
 
-    public PersonDTO(Person person) {
+    public PersonDTO(Person person, Set<HobbyDTO> hobbies) {
         if(person.getId() != null)
             this.id = person.getId();
         this.email = person.getEmail();
@@ -55,10 +58,11 @@ public class PersonDTO {
         for (Phone p : person.getPhone()) {
             phone.add(p.getNumber());
         }
-        hobbies = new HashMap<>();
-        for (Hobby hobby : person.getHobby()) {
-            hobbies.put(hobby.getName(), hobby.getDescription());
-        }
+//        hobbies = new HashMap<>();
+//        for (Hobby hobby : person.getHobby()) {
+//            hobbies.put(hobby.getName(), hobby.getDescription());
+//        }
+        this.hobbies = hobbies;
         this.streetName = person.getAddress().getStreet();
         this.streetAdditionalInfo = person.getAddress().getAdditionalInfo();
     }
@@ -103,14 +107,23 @@ public class PersonDTO {
         this.phone = phone;
     }
     
-    public Map<String, String> getHobbies() {
+//    public Map<String, String> getHobbies() {
+//        return hobbies;
+//    }
+//
+//    public void setHobbies(Map<String, String> hobbies) {
+//        this.hobbies = hobbies;
+//    }
+
+
+    public Set<HobbyDTO> getHobbies() {
         return hobbies;
     }
-    
-    public void setHobbies(Map<String, String> hobbies) {
+
+    public void setHobbies(Set<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
-    
+
     public String getStreetName() {
         return streetName;
     }

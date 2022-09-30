@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Todo Remove or change relevant parts before ACTUAL use
-@Path("xxx")
+@Path("person")
 public class PersonResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
@@ -24,32 +24,53 @@ public class PersonResource {
             
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String demo() {
-        return "{\"msg\":\"Hello World\"}";
+    public Response getAll() throws EntityNotFoundException {
+        List<PersonDTO> p = new ArrayList<>(FACADE.getAll());
+        System.out.println(FACADE.getByPhone(1));
+        return Response.ok().entity(GSON.toJson(p)).build();
     }
-    @Path("count")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getRenameMeCount() {
-       
-        long count = FACADE.getRenameMeCount();
-        //System.out.println("--------------->"+count);
-        return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
-    }
+//    @Path("count")
+//    @GET
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public String getRenameMeCount() {
+//
+//        long count = FACADE.getRenameMeCount();
+//        //System.out.println("--------------->"+count);
+//        return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
+//    }
+
     // Waiting to be implemented - Claes
 //    @GET
-//    @Path("/phone/{number}")
+//    @Path("/{number}")
 //    @Produces({MediaType.APPLICATION_JSON})
-//    public Response getByPhone(@PathParam("number") int phoneNumber) throws EntityNotFoundException {
-//        List<PersonDTO> p = new ArrayList<PersonDTO>(FACADE.getByPhone(phoneNumber));
+//    public Response getByP(@PathParam("number") int pNumber) throws EntityNotFoundException {
+//        System.out.println("Hello");
+//        System.out.println(pNumber);
+//        PersonDTO p = FACADE.getByPhone(pNumber);
 //        return Response.ok().entity(GSON.toJson(p)).build();
 //    }
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response postExample(String input){
-        PersonDTO rmdto = GSON.fromJson(input, PersonDTO.class);
-        System.out.println(rmdto);
-        return Response.ok().entity(rmdto).build();
-    }
+
+//    @GET
+//    @Path("/phone")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response getById(@PathParam("id") int id) throws EntityNotFoundException {
+//        List<PersonDTO> p = new ArrayList<>(FACADE.getByPhone(67821902));
+//        return Response.ok().entity(GSON.toJson(p)).build();
+//    }
+
+//    @GET
+//    @Path("/phone")
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response getById() throws EntityNotFoundException {
+//        List<PersonDTO> p = new ArrayList<>(FACADE.getByPhone(67821902));
+//        return Response.ok().entity(GSON.toJson(p)).build();
+//    }
+//    @POST
+//    @Produces({MediaType.APPLICATION_JSON})
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    public Response postExample(String input){
+//        PersonDTO rmdto = GSON.fromJson(input, PersonDTO.class);
+//        System.out.println(rmdto);
+//        return Response.ok().entity(rmdto).build();
+//    }
 }

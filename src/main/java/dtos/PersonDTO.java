@@ -26,8 +26,14 @@ public class PersonDTO {
     private Set<HobbyDTO> hobbies;
     private String streetName;
     private String streetAdditionalInfo;
+
+    // ToDo possibly find better solution
+    // Just holding these variables, for when a PersonDTO is converted to a Person entity
+    private int cityInfo_id;
+    private int hobby_id;
     
-    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Set<HobbyDTO> hobbies, String streetName, String streetAdditionalInfo) {
+    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Set<HobbyDTO> hobbies,
+                     String streetName, String streetAdditionalInfo, int cityInfo_id, int hobby_id) {
         // Map<String, String> hobbies,
         this.email = email;
         this.firstName = firstName;
@@ -37,12 +43,22 @@ public class PersonDTO {
         this.hobbies = hobbies;
         this.streetName = streetName;
         this.streetAdditionalInfo = streetAdditionalInfo;
+        this.cityInfo_id = cityInfo_id;
+        this.hobby_id = hobby_id;
+
     }
-    
-    public static List<PersonDTO> getDtos(List<Person> persons, Set<HobbyDTO> hobbies){
+
+    // ToDo change the List<List<>> to something smarter
+    public static List<PersonDTO> getDtos(List<Person> persons, List<List<HobbyDTO>> hobbies){
         List<PersonDTO> personDTOs = new ArrayList();
-        for(int i = 0; i < persons.size(); )
-        persons.forEach(person-> personDTOs.add(new PersonDTO(person)));
+        for(int i = 0; i < persons.size(); i++){
+            Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
+            for(HobbyDTO h : hobbies.get(i)){
+                hobbyDTOSet.add(h);
+            }
+            personDTOs.add(new PersonDTO(persons.get(i), hobbyDTOSet));
+        }
+//      persons.forEach(person-> personDTOs.add(new PersonDTO(person)));
         return personDTOs;
     }
 
@@ -139,7 +155,23 @@ public class PersonDTO {
     public void setStreetAdditionalInfo(String streetAdditionalInfo) {
         this.streetAdditionalInfo = streetAdditionalInfo;
     }
-    
+
+    public int getCityInfo_id() {
+        return cityInfo_id;
+    }
+
+    public void setCityInfo_id(int cityInfo_id) {
+        this.cityInfo_id = cityInfo_id;
+    }
+
+    public int getHobby_id() {
+        return hobby_id;
+    }
+
+    public void setHobby_id(int hobby_id) {
+        this.hobby_id = hobby_id;
+    }
+
     @Override
     public String toString() {
         return "PersonDTO{" +

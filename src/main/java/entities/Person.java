@@ -36,8 +36,8 @@ public class Person implements Serializable {
 //            inverseJoinColumns = @JoinColumn(name = "hobby_id")
 //    )
 //    private Set<Hobby> hobby;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
-    private Set<Phone> phone;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "person")
+    private Set<Phone> phone = new LinkedHashSet<>();
     
     public Person() {
     }

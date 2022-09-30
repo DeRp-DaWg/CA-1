@@ -7,7 +7,7 @@ public class CityInfoDTO {
     private String nr;
     private String navn;
 
-    public CityInfoDTO(String href, String nr, String navn){
+    public CityInfoDTO(String nr, String navn){
         this.nr = nr;
         this.navn = navn;
     }

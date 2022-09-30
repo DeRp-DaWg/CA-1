@@ -47,4 +47,11 @@ public class Phone implements Serializable {
     public void setPerson(Person person) {
         this.person = person;
     }
+
+    public void assignPersons(Person person){
+        if(person != null){
+            this.person = person;
+            person.getPhone().add(this); // bi-directional: sætter student ind i Hashset hos semester
+        }
+    }
 }

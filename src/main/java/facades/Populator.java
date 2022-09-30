@@ -78,7 +78,7 @@ public class Populator {
 
         for (CityInfoDTO dto : ZipDTO) {
             //System.out.println("Name: " + dto.getnavn() + " Zip: " + dto.getNr());
-            fe.insertCityInfo(new CityInfo(dto.getnavn(), dto.getNr());
+            fe.insertCityInfo(new CityInfoDTO(dto.getnavn(), dto.getNr()));
         }
 
         // Insert into PersonFacade
@@ -119,7 +119,8 @@ public class Populator {
         for(HobbyDTO dto : fe.getHobbies(1)){
             hobbies.add(dto);
         }
-        fe.create(new PersonDTO("user@mail.dk", "Lars", "Jørgensen", "1234", phones, hobbies, "Østerbrogade 3", "1. th"));
+        fe.create(new PersonDTO("user@mail.dk", "Lars", "Jørgensen", "1234", phones, hobbies, "Østerbrogade 3", "1. th", 1, 1));
+//        System.out.println(fe.getByPhone(67821902));
     }
     
     public static void main(String[] args) {

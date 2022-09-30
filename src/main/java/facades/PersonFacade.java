@@ -49,15 +49,21 @@ public class PersonFacade {
         for(String s : personDTO.getPhone()) {
             phones.add(new Phone(s));
         }
-        Address address = new Address(personDTO.getStreetName(), personDTO.getStreetAdditionalInfo());
-        Set<Hobby> hobbies = new LinkedHashSet<>();
-        for(Map.Entry<String, String> entry : personDTO.getHobbies().entrySet()) {
-            hobbies.add(new Hobby(entry.getKey(), entry.getValue()));
+        Address address = new Address(personDTO.getStreetName(), personDTO.getStreetAdditionalInfo(), personDTO.getCityInfo_id());
+        Set<HobbyDTO> hobbies = new LinkedHashSet<>();
+        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
+//            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
+            hobbies.add(hobbyDTO);
         }
-        Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
+//        for(Map.Entry<String, String> entry : personDTO.getHobbies().entrySet()) {
+//            hobbies.add(new Hobby(entry.getKey(), entry.getValue()));
+//        }
+        Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword(), personDTO.getHobby_id());
         person.setPhone(phones);
         person.setAddress(address);
-        person.setHobby(hobbies);
+        for(Phone p : phones){
+            p.assignPersons(person);
+        }
         // Phone phone = new Phone(number, );
         // Address address = new Address(street, info, CityInfo);
         // Hobby hobby = new Hobby(name, desc);
@@ -69,19 +75,37 @@ public class PersonFacade {
         } finally {
             em.close();
         }
-        return new PersonDTO(person);
+        return new PersonDTO(person, hobbies);
     }
     /* Returns and works with lists, because there is a chance that
      more people uses the same phone number (per example: a child and
      their parent) */
-    public List<PersonDTO> getByPhone(long phoneNumber) { //throws RenameMeNotFoundException {
+    public List<PersonDTO> getByPhone(int phoneNumber) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = :phoneNumber", Person.class)
-                .setParameter("phoneNumber", phoneNumber);
-        List<Person> persons = query.getResultList();
+        String textNumber = "";
+        if(phoneNumber == 1){
+            textNumber = "67821902";
+        }
+        else {
+            textNumber = String.valueOf(phoneNumber);
+        }
+
+//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phone t WHERE t.number = :phoneNumber", Person.class)
+                .setParameter("phoneNumber", textNumber);
+        List<Person> person = query.getResultList();
+//        Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
+//        for(HobbyDTO h : getHobbies(person.getHobby_id())){
+//            hobbyDTOSet.add(h);
+//        }
+//        PersonDTO personDTO = new PersonDTO(person, hobbyDTOSet);
         List<PersonDTO> personDTOS = new ArrayList<>();
-        for (Person p : persons) {
-            personDTOS.add(new PersonDTO(p));
+        for (Person p : person) {
+            Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
+            for(HobbyDTO h : getHobbies(p.getHobby_id())){
+                hobbyDTOSet.add(h);
+            }
+            personDTOS.add(new PersonDTO(p, hobbyDTOSet));
         }
         //Person person = em.find(Person.class, phoneNumber);
 //        if (rm == null)
@@ -90,44 +114,31 @@ public class PersonFacade {
     }
 
     // Gets all persons with a given hobby xxxxx maybe
-    public List<PersonDTO> getByHobby(String hobby){
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.hobby = :hobby", Person.class)
-                .setParameter("hobby", hobby);
-        List<Person> persons = query.getResultList();
-        List<PersonDTO> personDTOS = new ArrayList<>();
-        for (Person h : persons){
-            personDTOS.add(new PersonDTO(h));
-        }
-        return personDTOS;
-    }
+//    public List<PersonDTO> getByHobby(String hobby){
+//        EntityManager em = emf.createEntityManager();
+//        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.hobby = :hobby", Person.class)
+//                .setParameter("hobby", hobby);
+//        List<Person> persons = query.getResultList();
+//        List<PersonDTO> personDTOS = new ArrayList<>();
+//        for (Person h : persons){
+//            personDTOS.add(new PersonDTO(h));
+//        }
+//        return personDTOS;
+//    }
 
     //Get all persons living in a given city
-    public List<PersonDTO> getByAddress(String address){
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT a FROM Address a WHERE a.adress = :adress", Person.class)
-                .setParameter("adress", address);
-        List<Person> persons = query.getResultList();
-        List<PersonDTO> personDTOS = new ArrayList<>();
-        for (Person a : persons){
-            personDTOS.add(new PersonDTO(a));
-        }
-        return personDTOS;
-    }
-    //Get the number of people with a given hobby
+//    public List<PersonDTO> getByAddress(String address){
+//        EntityManager em = emf.createEntityManager();
+//        TypedQuery<Person> query = em.createQuery("SELECT a FROM Address a WHERE a.adress = :adress", Person.class)
+//                .setParameter("adress", address);
+//        List<Person> persons = query.getResultList();
+//        List<PersonDTO> personDTOS = new ArrayList<>();
+//        for (Person a : persons){
+//            personDTOS.add(new PersonDTO(a));
+//        }
+//        return personDTOS;
+//    }
 
-
-    //
-    //Get a list of all zip codes in Denmark
-
-
-    //
-    //Create new Persons
-
-    //
-    //Edit Persons
-
-    //
     //TODO Remove/Change this before use
     public long getRenameMeCount(){
         EntityManager em = getEntityManager();
@@ -143,7 +154,11 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT r FROM Person r", Person.class);
         List<Person> rms = query.getResultList();
-        return PersonDTO.getDtos(rms);
+        List<List<HobbyDTO>> hobbyList = new ArrayList<>();
+        for(Person p : rms){
+            hobbyList.add(getHobbies(p.getHobby_id()));
+        }
+        return PersonDTO.getDtos(rms, hobbyList);
     }
     
     public static void main(String[] args) {

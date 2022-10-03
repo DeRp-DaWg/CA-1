@@ -32,6 +32,7 @@ public class Address implements Serializable {
     @OneToMany
     @JoinColumn(name="")
     private Set<Person> person = new LinkedHashSet<>();
+
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     @ManyToOne
     @JoinColumn(name = "city_info_id")
@@ -67,6 +68,12 @@ public class Address implements Serializable {
         this.street = street;
         this.additionalInfo = additionalInfo;
         this.cityinfo_id = cityinfo_id;
+    }
+    public void assingCityinfo(CityInfo cityInfo){
+        if(cityInfo != null){
+            this.cityInfo = cityInfo;
+            cityInfo.getAddresses().add(this);
+        }
     }
     
     public Long getId() {

@@ -52,6 +52,10 @@ public class CityInfo { // zipcode: 2100, city: Østerbro
         this.city = city;
     }
 
+    public Set<Address> getAddresses(){
+        return addresses;
+    }
+
 //    public Set<Address> getAddresses() {
 //        return addresses;
 //    }

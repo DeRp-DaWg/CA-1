@@ -25,9 +25,40 @@ public class Address implements Serializable {
 //    @JoinColumn(name="cityinfo_id")
 //    private CityInfo cityInfo;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "Cityinfo")
+
+
     @OneToMany
     @JoinColumn(name="")
     private Set<Person> person = new LinkedHashSet<>();
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    @ManyToOne
+    @JoinColumn(name = "city_info_id")
+    private CityInfo cityInfo;
+
+    //xxxxxxxxxxxxxxxxxx
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private CityInfo address;
+
+    public CityInfo getAddress() {
+        return address;
+    }
+
+    public void setAddress(CityInfo address) {
+        this.address = address;
+    }
+
+    public CityInfo getCityInfo() {
+        return cityInfo;
+    }
+
+    public void setCityInfo(CityInfo cityInfo) {
+        this.cityInfo = cityInfo;
+    }
+
+    //Many to one
 
     public Address() {
     }

@@ -33,12 +33,10 @@ public class Address implements Serializable {
     @JoinColumn(name="")
     private Set<Person> person = new LinkedHashSet<>();
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     @ManyToOne
     @JoinColumn(name = "city_info_id")
     private CityInfo cityInfo;
 
-    //xxxxxxxxxxxxxxxxxx
     @ManyToOne
     @JoinColumn(name = "address_id")
     private CityInfo address;

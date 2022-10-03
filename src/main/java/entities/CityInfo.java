@@ -16,14 +16,12 @@ public class CityInfo { // zipcode: 2100, city: Østerbro
     //XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     @OneToMany(mappedBy = "address")
     private Set<Address> addresses = new LinkedHashSet<>();
-
-
+    
     @Column(name = "zipcode")
     private String zipCode;
 
     @Column(name = "city")
     private String city;
-
 
     public CityInfo(){}
 

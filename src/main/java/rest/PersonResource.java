@@ -89,7 +89,7 @@ public class PersonResource {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(@PathParam("id") int id, String content) throws EntityNotFoundException {
+    public Response update(@PathParam("id") Long id, String content) throws EntityNotFoundException {
         PersonDTO p = GSON.fromJson(content, PersonDTO.class);
         p.setId(id); //Should be implemented
         PersonDTO updated = FACADE.update(p);

@@ -18,7 +18,7 @@ public class Address implements Serializable {
     private String street;
     private String additionalInfo;
 
-    private int cityinfo_id;
+    private Long cityinfo_id;
     
 //    @ManyToOne
 //    @Where(clause = "")
@@ -37,17 +37,17 @@ public class Address implements Serializable {
     @JoinColumn(name = "city_info_id")
     private CityInfo cityInfo;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private CityInfo address;
+//    @ManyToOne
+//    @JoinColumn(name = "address_id")
+//    private CityInfo address;
 
-    public CityInfo getAddress() {
-        return address;
-    }
-
-    public void setAddress(CityInfo address) {
-        this.address = address;
-    }
+//    public CityInfo getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(CityInfo address) {
+//        this.address = address;
+//    }
 
     public CityInfo getCityInfo() {
         return cityInfo;
@@ -62,7 +62,7 @@ public class Address implements Serializable {
     public Address() {
     }
     
-    public Address(String street, String additionalInfo, int cityinfo_id) {
+    public Address(String street, String additionalInfo, Long cityinfo_id) {
         this.street = street;
         this.additionalInfo = additionalInfo;
         this.cityinfo_id = cityinfo_id;

@@ -30,11 +30,11 @@ public class PersonDTO {
 
     // ToDo possibly find better solution
     // Just holding these variables, for when a PersonDTO is converted to a Person entity
-    private int cityInfo_id;
-    private int hobby_id;
+    private Long cityInfo_id;
+    private Set<Long> hobby_id;
 
-    public PersonDTO(Long id, String email, String firstName, String lastName, String password, Set<PhoneDTO> phone,
-                     Set<HobbyDTO> hobbies, AddressDTO address, int cityInfo_id, int hobby_id) {
+    public PersonDTO(Long id, String email, String firstName, String lastName, String password,
+                     Set<PhoneDTO> phone, Set<HobbyDTO> hobbies, AddressDTO address, Long cityInfo_id, Set<Long> hobby_id) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -176,19 +176,19 @@ public class PersonDTO {
         this.address = address;
     }
 
-    public int getCityInfo_id() {
+    public Long getCityInfo_id() {
         return cityInfo_id;
     }
 
-    public void setCityInfo_id(int cityInfo_id) {
+    public void setCityInfo_id(Long cityInfo_id) {
         this.cityInfo_id = cityInfo_id;
     }
 
-    public int getHobby_id() {
+    public Set<Long> getHobby_id() {
         return hobby_id;
     }
 
-    public void setHobby_id(int hobby_id) {
+    public void setHobby_id(Set<Long> hobby_id) {
         this.hobby_id = hobby_id;
     }
 }

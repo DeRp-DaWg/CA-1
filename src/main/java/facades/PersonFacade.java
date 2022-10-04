@@ -46,6 +46,28 @@ public class PersonFacade {
         return emf.createEntityManager();
     }
 
+    public Person assignCityInfo(long cityInfoId, Person person){
+        EntityManager em = emf.createEntityManager();
+        CityInfo cityInfo = em.find(CityInfo.class, cityInfoId);
+        em.getTransaction().begin();
+        person.getAddress().assingCityinfo(cityInfo);
+        em.getTransaction().commit();
+        em.close();
+        return person;
+    }
+
+    public Person assignHobby(Set<Long> hobbyId, Person person){
+        EntityManager em = emf.createEntityManager();
+        Set<Hobby> hobbies = new LinkedHashSet<>();
+        for(Long l : hobbyId){
+            hobbies.add(em.find(Hobby.class, l));
+        }
+        em.getTransaction().begin();
+        person.setHobby(hobbies);
+        em.getTransaction().commit();
+        em.close();
+        return person;
+    }
     public PersonDTO create(PersonDTO personDTO){
 //        Set<Phone> phones = new LinkedHashSet<>();
 //        for(String s : personDTO.getPhone()) {
@@ -67,9 +89,8 @@ public class PersonFacade {
         for(Phone p : person.getPhone()){
             p.assignPersons(person);
         }
-        for(Hobby h : person.getHobby()){
-            p.
-        }
+        person = assignCityInfo(personDTO.getCityInfo_id(), person);
+        person = assignHobby(personDTO.getHobby_id(), person);
         // Phone phone = new Phone(number, );
         // Address address = new Address(street, info, CityInfo);
         // Hobby hobby = new Hobby(name, desc);

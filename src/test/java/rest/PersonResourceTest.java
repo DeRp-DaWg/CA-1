@@ -105,32 +105,102 @@ public class PersonResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/api/").then().statusCode(200);
+        given().when().get("/").then().statusCode(200);
     }
-
-    //This test assumes the database contains two rows
+    
     @Test
-    public void testDummyMsg() throws Exception {
+    public void testWrongURL() {
         given()
                 .contentType("application/json")
-                .get("/api/").then()
+                .get("/thisisnotavalidurl/").then()
                 .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("msg", equalTo("Hello World"));
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode());
     }
 
     @Test
-    public void testGetPersonByPhone() throws Exception {
+    public void testGetPersonWithPhone() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/api/person/12345678").then()
+                .get("/person/12345678").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("email", equalTo("HansHansen@fake.mail"))
                 .body("firstName", equalTo("Hans"))
                 .body("lastName", equalTo("Hansen"))
                 .body("phone", hasItems(12345678, 23456789))
-                .body("hobby", hasItems(hasEntry("name", "Skuespil"), hasEntry("name", "Amatørradio")))
+                .body("hobby", hasItem(allOf(
+                        hasProperty("name", equalTo("Skuespil")),
+                        hasProperty("name", equalTo("Amatørradio")))))
                 .body("address", hasEntry("street", "Hansstreet 38"));
+    }
+    
+    @Test
+    public void testGetPersonsWithHobby() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/hobby/Amatørradio").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body(hasItem(allOf(
+                        hasProperty("email", equalTo("HansHansen@fake.mail")),
+                        hasProperty("firstName", equalTo("Hans")),
+                        hasProperty("lastName", equalTo("Hansen")),
+                        hasProperty("phone", hasItems(12345678, 23456789)),
+                        hasProperty("hobby", hasItem(allOf(
+                                hasProperty("name", equalTo("Skuespil")),
+                                hasProperty("name", equalTo("Amatørradio"))))),
+                        hasProperty("address", hasEntry("street", "Hansstreet 38")))));
+    }
+    
+    @Test
+    public void testGetAmountOfPersonsWithHobby() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/hobby/amount/Amatørradio").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("amount", equalTo(2));
+    }
+    
+    @Test
+    public void testGetAllZips() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/person/zips").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("", equalTo(""));
+    }
+    
+    @Test
+    public void testCreatePerson() throws Exception {
+        PersonDTO newPerson = new PersonDTO(p1);
+        newPerson.setId(null);
+        given()
+                .contentType("application/json")
+                .body(p1)
+                .post("/person").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
+        given()
+                .contentType("application/json")
+                .get().then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("", equalTo(""));
+    }
+    
+    @Test
+    public void testDeletePerson() throws Exception {
+        given()
+                .contentType("application/json")
+                .delete("/person/1").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
+        given()
+                .contentType("application/json")
+                .get("/person/1").then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode());
     }
 }

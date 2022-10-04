@@ -3,6 +3,11 @@ package dtos;
 import entities.Person;
 import entities.Phone;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 public class PhoneDTO {
     private Long id;
     private String number;
@@ -21,6 +26,15 @@ public class PhoneDTO {
             this.person = new PersonDTO(phone.getPerson());
 
         }
+    }
+
+    public static List<PhoneDTO> getDtos(List<Phone> phones){
+        List<PhoneDTO> phoneDTOs = new ArrayList();
+        for(Phone p : phones){
+            phoneDTOs.add(new PhoneDTO(p));
+        }
+//      persons.forEach(person-> personDTOs.add(new PersonDTO(person)));
+        return phoneDTOs;
     }
 
 //    public Phone getEntity(){

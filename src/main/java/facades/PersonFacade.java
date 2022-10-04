@@ -183,9 +183,8 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
 
 //        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
-//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
-        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobbyName", Person.class)
-                .setParameter("hobbyName", hobby); //Change to selecting a person, when hobby is implemented under person
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
+                .setParameter("hobbyName", hobby);
         List<Person> persons = query.getResultList();
         List<PersonDTO> personDTOS = new ArrayList<>();
 

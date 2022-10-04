@@ -8,15 +8,13 @@ package facades;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import dtos.HobbyDTO;
-import dtos.PersonDTO;
-import dtos.CityInfoDTO;
+import dtos.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
-import dtos.PhoneDTO;
+import entities.Address;
 import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
@@ -113,24 +111,33 @@ public class Populator {
 //            return cityInfoDTOs;
 //        }
         Set<PhoneDTO> phoneDTOS = new LinkedHashSet<>();
-        Set<String> phones = new LinkedHashSet<>();
-        phones.add("67821902");
+        phoneDTOS.add(new PhoneDTO("67821902"));
+//        Set<String> phones = new LinkedHashSet<>();
+//        phones.add("67821902");
         //Map<String, String> hobbies = new HashMap<>();
 //        hobbies.put("Fodbold", "Man sparker til en bold");
         Set<HobbyDTO> hobbies = new LinkedHashSet<>();
         for(HobbyDTO dto : fe.getHobbies(1)){
             hobbies.add(dto);
         }
-        fe.create(new PersonDTO(null, "user@mail.dk", "Claes", "Heise", "1234", ));
-        phones = new LinkedHashSet<>();
-        phones.add("27834091");
+        Set<Long> hobbyIDs = new LinkedHashSet<>();
+        hobbyIDs.add(1L);
+        AddressDTO addressDTO = new AddressDTO(new Address("Østerbrogade", "2. th"));
+        fe.create(new PersonDTO(null, "user@mail.dk", "Claes", "Heise", "1234", phoneDTOS, hobbies, addressDTO,1L, hobbyIDs));
+//        phones = new LinkedHashSet<>();
+//        phones.add("27834091");
         //Map<String, String> hobbies = new HashMap<>();
 //        hobbies.put("Fodbold", "Man sparker til en bold");
+        phoneDTOS = new LinkedHashSet<>();
+        phoneDTOS.add(new PhoneDTO("27834091"));
         hobbies = new LinkedHashSet<>();
         for(HobbyDTO dto : fe.getHobbies(2)){
             hobbies.add(dto);
         }
-        fe.create(new PersonDTO(2, "user2@mail.dk", "Troels", "Sandfer", "1234", phones, hobbies, "Finsensvej", "5. tv", 5, 2));
+        hobbyIDs = new LinkedHashSet<>();
+        hobbyIDs.add(2L);
+        addressDTO = new AddressDTO(new Address("Finsensvej", "5. tv"));
+        fe.create(new PersonDTO(null, "user2@mail.dk", "Troels", "Sandfer", "1234", phoneDTOS, hobbies, addressDTO, 5L, hobbyIDs));
 //        System.out.println(fe.getByPhone(67821902));
     }
     

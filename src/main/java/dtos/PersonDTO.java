@@ -68,11 +68,13 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.password = person.getPassword();
-        Set<PhoneDTO> phones = new LinkedHashSet<>();
-        for(Phone p : person.getPhone()){
-            phones.add(new PhoneDTO(p));
-        }
-        this.phone = phones;
+//        Set<PhoneDTO> phones = new LinkedHashSet<>();
+//        for(Phone p : person.getPhone()){
+//            phones.add(new PhoneDTO(p));
+//        }
+//        this.phone = phones;
+        PhoneDTO phoneDTO = new PhoneDTO(person.getPhone().);
+        this.phone = ;
 //        hobbies = new HashMap<>();
 //        for (Hobby hobby : person.getHobby()) {
 //            hobbies.put(hobby.getName(), hobby.getDescription());
@@ -86,7 +88,7 @@ public class PersonDTO {
 
     public Person getEntity(){
         Person person = new Person(this.getEmail(), this.getFirstName(), this.getLastName(), this.getPassword());
-        if(this.id != 0){
+        if(this.id != null && this.id != 0){
             person.setId(this.id);
         }
         Set<Phone> phones = new LinkedHashSet<>();
@@ -98,7 +100,7 @@ public class PersonDTO {
             phones.add(ph);
         }
         person.setPhone(phones);
-        person.setAddress(new Address(this.address.getStreet(), this.address.getAdditionalInfo(), this.cityInfo_id));
+        person.setAddress(new Address(this.address.getStreet(), this.address.getAdditionalInfo()));
         Set<Hobby> hobbies = new LinkedHashSet<>();
         for(HobbyDTO h : this.getHobbies()){
             Hobby hd = new Hobby(h.getHobby_name(), h.getHobby_wikiLink(), h.getHobby_category(), h.getHobby_type());

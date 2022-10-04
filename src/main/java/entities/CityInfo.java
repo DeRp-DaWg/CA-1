@@ -14,7 +14,7 @@ public class CityInfo { // zipcode: 2100, city: Østerbro
     private Long id;
 
     //XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.PERSIST)
     private Set<Address> addresses = new LinkedHashSet<>();
     
     @Column(name = "zipcode")

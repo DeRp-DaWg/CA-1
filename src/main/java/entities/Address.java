@@ -33,7 +33,7 @@ public class Address implements Serializable {
     @JoinColumn(name="")
     private Set<Person> person = new LinkedHashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "city_info_id")
     private CityInfo cityInfo;
 

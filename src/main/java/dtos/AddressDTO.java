@@ -1,6 +1,7 @@
 package dtos;
 
 import entities.Address;
+import entities.CityInfo;
 
 public class AddressDTO {
     private String street;
@@ -9,9 +10,10 @@ public class AddressDTO {
     private CityInfoDTO cityInfoDTO;
 
 
-    public AddressDTO(String street, String additionalInfo) {
+    public AddressDTO(String street, String additionalInfo, CityInfoDTO cityInfoDTO) {
         this.street = street;
         this.additionalInfo = additionalInfo;
+        this.cityInfoDTO = cityInfoDTO;
     }
 
     public AddressDTO(Address address) {

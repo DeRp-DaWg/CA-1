@@ -4,10 +4,7 @@ import dtos.HobbyDTO;
 import dtos.PersonDTO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.*;
 
 
@@ -24,30 +21,26 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
-
-    private int hobby_id;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
-//    @ManyToMany(cascade = CascadeType.PERSIST)
-//    @JoinTable(
-//            name = "personhobby",
-//            joinColumns = @JoinColumn(name = "person_id"),
-//            inverseJoinColumns = @JoinColumn(name = "hobby_id")
-//    )
-//    private Set<Hobby> hobby;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "personhobby",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "hobby_id")
+    )
+    private Set<Hobby> hobby = new LinkedHashSet<>();
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "person")
     private Set<Phone> phone = new LinkedHashSet<>();
     
     public Person() {
     }
     
-    public Person(String email, String firstName, String lastName, String password, int hobby_id) {
+    public Person(String email, String firstName, String lastName, String password) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.hobby_id = hobby_id;
     }
     
     public Long getId() {
@@ -113,13 +106,12 @@ public class Person implements Serializable {
     public void setPhone(Set<Phone> phone) {
         this.phone = phone;
     }
-
-    public int getHobby_id() {
-        return hobby_id;
+    
+    public Set<Hobby> getHobby() {
+        return hobby;
     }
-
-    public void setHobby_id(int hobby_id) {
-        this.hobby_id = hobby_id;
+    
+    public void setHobby(Set<Hobby> hobby) {
+        this.hobby = hobby;
     }
-
 }

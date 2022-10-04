@@ -2,6 +2,8 @@ package entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -22,8 +24,8 @@ import java.util.Set;
 
         private String type;
 
-//        @ManyToMany(mappedBy = "hobby")
-//        private Set<Person> person;
+        @ManyToMany(mappedBy = "hobby")
+        private Set<Person> person = new LinkedHashSet<>();
 
         public Hobby() {
         }

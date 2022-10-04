@@ -1,12 +1,21 @@
 package rest;
 
+import dtos.HobbyDTO;
+import dtos.PersonDTO;
+import entities.Address;
+import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -14,7 +23,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import static org.hamcrest.Matchers.equalTo;
 
 //Uncomment the line below, to temporarily disable this test
 @Disabled
@@ -23,7 +31,7 @@ public class PersonResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Person r1, r2;
+    private static Person p1, p2;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -61,13 +69,33 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-//        r1 = new Person("Some txt", "More text");
-//        r2 = new Person("aaa", "bbb");
+        Set<Phone> hansPhones = new HashSet<>();
+        hansPhones.add(new Phone("12345678"));
+        hansPhones.add(new Phone("23456789"));
+        Set<Hobby> hansHobbies = new HashSet<>();
+        hansHobbies.add(new Hobby("Skuespil", "", "", ""));
+        hansHobbies.add(new Hobby("Amatørradio", "", "", ""));
+        p1 = new Person("HansHansen@fake.mail", "Hans", "Hansen", "1234");
+        p1.setPhone(hansPhones);
+        p1.setHobby(hansHobbies);
+        p1.setAddress(new Address("Hansstreet 38", "Nothing"));
+    
+        Set<Phone> jensPhones = new HashSet<>();
+        jensPhones.add(new Phone("87654321"));
+        jensPhones.add(new Phone("98765432"));
+        Set<Hobby> jensHobbies = new HashSet<>();
+        jensHobbies.add(new Hobby("3D-udskrivning", "", "", ""));
+        jensHobbies.add(new Hobby("Amatørradio", "", "", ""));
+        jensHobbies.add(new Hobby("Animation", "", "", ""));
+        p2 = new Person("JensJensen@fake.mail", "Jens", "Jensen", "1234");
+        p2.setPhone(jensPhones);
+        p2.setHobby(jensHobbies);
+        p2.setAddress(new Address("Jensstreet 2", ""));
         try {
             em.getTransaction().begin();
 //            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(r1);
-            em.persist(r2);
+            em.persist(p1);
+            em.persist(p2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -77,7 +105,7 @@ public class PersonResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/xxx").then().statusCode(200);
+        given().when().get("/api/").then().statusCode(200);
     }
 
     //This test assumes the database contains two rows
@@ -85,19 +113,24 @@ public class PersonResourceTest {
     public void testDummyMsg() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/xxx/").then()
+                .get("/api/").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("msg", equalTo("Hello World"));
     }
 
     @Test
-    public void testCount() throws Exception {
+    public void testGetPersonByPhone() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/xxx/count").then()
+                .get("/api/person/12345678").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("count", equalTo(2));
+                .body("email", equalTo("HansHansen@fake.mail"))
+                .body("firstName", equalTo("Hans"))
+                .body("lastName", equalTo("Hansen"))
+                .body("phone", hasItems(12345678, 23456789))
+                .body("hobby", hasItems(hasEntry("name", "Skuespil"), hasEntry("name", "Amatørradio")))
+                .body("address", hasEntry("street", "Hansstreet 38"));
     }
 }

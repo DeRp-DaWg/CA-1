@@ -114,4 +114,15 @@ public class Person implements Serializable {
     public void setHobby(Set<Hobby> hobby) {
         this.hobby = hobby;
     }
+
+    public Set<Hobby> addHobby(Hobby hobby2) {
+        Set<Hobby> hobbies = this.hobby;
+        hobbies.add(hobby2);
+        return hobbies;
+    }
+    public Set<Hobby> removeHobby(Hobby hobby2) {
+        Set<Hobby> hobbies = this.hobby;
+        hobbies.remove(hobby2);
+        return hobbies;
+    }
 }

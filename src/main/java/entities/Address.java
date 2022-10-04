@@ -18,7 +18,7 @@ public class Address implements Serializable {
     private String street;
     private String additionalInfo;
 
-    private Long cityinfo_id;
+//    private Long cityinfo_id;
     
 //    @ManyToOne
 //    @Where(clause = "")
@@ -59,13 +59,12 @@ public class Address implements Serializable {
 
     //Many to one
 
-    public Address() {
-    }
+    public Address() {}
     
-    public Address(String street, String additionalInfo, Long cityinfo_id) {
+    public Address(String street, String additionalInfo) {
         this.street = street;
         this.additionalInfo = additionalInfo;
-        this.cityinfo_id = cityinfo_id;
+//        this.cityinfo_id = cityinfo_id;
     }
     public void assingCityinfo(CityInfo cityInfo){
         if(cityInfo != null){

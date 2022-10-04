@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
+import dtos.PhoneDTO;
 import entities.CityInfo;
 import entities.Hobby;
 import entities.Person;
@@ -111,6 +112,7 @@ public class Populator {
 ////            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
 //            return cityInfoDTOs;
 //        }
+        Set<PhoneDTO> phoneDTOS = new LinkedHashSet<>();
         Set<String> phones = new LinkedHashSet<>();
         phones.add("67821902");
         //Map<String, String> hobbies = new HashMap<>();
@@ -119,7 +121,7 @@ public class Populator {
         for(HobbyDTO dto : fe.getHobbies(1)){
             hobbies.add(dto);
         }
-        fe.create(new PersonDTO("user@mail.dk", "Lars", "Jørgensen", "1234", phones, hobbies, "Østerbrogade 3", "1. th", 1, 1));
+        fe.create(new PersonDTO(null, "user@mail.dk", "Claes", "Heise", "1234", ));
         phones = new LinkedHashSet<>();
         phones.add("27834091");
         //Map<String, String> hobbies = new HashMap<>();
@@ -128,7 +130,7 @@ public class Populator {
         for(HobbyDTO dto : fe.getHobbies(2)){
             hobbies.add(dto);
         }
-        fe.create(new PersonDTO("user2@mail.dk", "Troels", "Sandfer", "1234", phones, hobbies, "Finsensvej", "5. tv", 5, 2));
+        fe.create(new PersonDTO(2, "user2@mail.dk", "Troels", "Sandfer", "1234", phones, hobbies, "Finsensvej", "5. tv", 5, 2));
 //        System.out.println(fe.getByPhone(67821902));
     }
     

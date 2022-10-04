@@ -47,24 +47,28 @@ public class PersonFacade {
     }
 
     public PersonDTO create(PersonDTO personDTO){
-        Set<Phone> phones = new LinkedHashSet<>();
-        for(String s : personDTO.getPhone()) {
-            phones.add(new Phone(s));
-        }
-        Address address = new Address(personDTO.getStreetName(), personDTO.getStreetAdditionalInfo(), personDTO.getCityInfo_id());
-        Set<HobbyDTO> hobbies = new LinkedHashSet<>();
-        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
-//            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-            hobbies.add(hobbyDTO);
-        }
+//        Set<Phone> phones = new LinkedHashSet<>();
+//        for(String s : personDTO.getPhone()) {
+//            phones.add(new Phone(s));
+//        }
+//        Address address = new Address(personDTO.getStreetName(), personDTO.getStreetAdditionalInfo(), personDTO.getCityInfo_id());
+//        Set<HobbyDTO> hobbies = new LinkedHashSet<>();
+//        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
+////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
+//            hobbies.add(hobbyDTO);
+//        }
 //        for(Map.Entry<String, String> entry : personDTO.getHobbies().entrySet()) {
 //            hobbies.add(new Hobby(entry.getKey(), entry.getValue()));
 //        }
-        Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
-        person.setPhone(phones);
-        person.setAddress(address);
-        for(Phone p : phones){
+        Person person = personDTO.getEntity();
+//                new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
+//        person.setPhone(personDTO.getPhone());
+//        person.setAddress(address);
+        for(Phone p : person.getPhone()){
             p.assignPersons(person);
+        }
+        for(Hobby h : person.getHobby()){
+            p.
         }
         // Phone phone = new Phone(number, );
         // Address address = new Address(street, info, CityInfo);
@@ -142,11 +146,11 @@ public class PersonFacade {
 //        PersonDTO personDTO = new PersonDTO(person, hobbyDTOSet);
         List<PersonDTO> personDTOS = new ArrayList<>();
         for (Person p : person) {
-            Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
-            for(HobbyDTO h : getHobbies(p.getHobby_id())){
-                hobbyDTOSet.add(h);
-            }
-            personDTOS.add(new PersonDTO(p, hobbyDTOSet));
+//            Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
+//            for(HobbyDTO h : getHobbies(p.getHobby_id())){
+//                hobbyDTOSet.add(h);
+//            }
+            personDTOS.add(new PersonDTO(p));
         }
         //Person person = em.find(Person.class, phoneNumber);
 //        if (rm == null)
@@ -280,11 +284,11 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT r FROM Person r", Person.class);
         List<Person> rms = query.getResultList();
-        List<List<HobbyDTO>> hobbyList = new ArrayList<>();
-        for(Person p : rms){
-            hobbyList.add(getHobbies(p.getHobby_id()));
-        }
-        return PersonDTO.getDtos(rms, hobbyList);
+//        List<List<HobbyDTO>> hobbyList = new ArrayList<>();
+//        for(Person p : rms){
+//            hobbyList.add(getHobbies(p.getHobby_id()));
+//        }
+        return PersonDTO.getDtos(rms);
     }
     
     public static void main(String[] args) {

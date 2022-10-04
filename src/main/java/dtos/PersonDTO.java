@@ -5,6 +5,7 @@
  */
 package dtos;
 
+import entities.Address;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -22,34 +23,30 @@ public class PersonDTO {
     private String firstName;
     private String lastName;
     private String password;
-    private Set<String> phone;
+    private Set<PhoneDTO> phone;
 //    private Map<String, String> hobbies;
     private Set<HobbyDTO> hobbies;
-    private String streetName;
-    private String streetAdditionalInfo;
+    private AddressDTO address;
 
     // ToDo possibly find better solution
     // Just holding these variables, for when a PersonDTO is converted to a Person entity
     private int cityInfo_id;
     private int hobby_id;
-    
-    public PersonDTO(String email, String firstName, String lastName, String password, Set<String> phone, Set<HobbyDTO> hobbies,
-                     String streetName, String streetAdditionalInfo, int cityInfo_id, int hobby_id) {
-        // Map<String, String> hobbies,
+
+    public PersonDTO(Long id, String email, String firstName, String lastName, String password, Set<PhoneDTO> phone,
+                     Set<HobbyDTO> hobbies, AddressDTO address, int cityInfo_id, int hobby_id) {
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.phone = phone;
         this.hobbies = hobbies;
-        this.streetName = streetName;
-        this.streetAdditionalInfo = streetAdditionalInfo;
+        this.address = address;
         this.cityInfo_id = cityInfo_id;
         this.hobby_id = hobby_id;
-
     }
 
-    // ToDo change the List<List<>> to something smarter
     public static List<PersonDTO> getDtos(List<Person> persons){
         List<PersonDTO> personDTOs = new ArrayList();
         for(int i = 0; i < persons.size(); i++){
@@ -71,10 +68,11 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.password = person.getPassword();
-        phone = new HashSet<>();
-        for (Phone p : person.getPhone()) {
-            phone.add(p.getNumber());
+        Set<PhoneDTO> phones = new LinkedHashSet<>();
+        for(Phone p : person.getPhone()){
+            phones.add(new PhoneDTO(p));
         }
+        this.phone = phones;
 //        hobbies = new HashMap<>();
 //        for (Hobby hobby : person.getHobby()) {
 //            hobbies.put(hobby.getName(), hobby.getDescription());
@@ -83,78 +81,84 @@ public class PersonDTO {
         for(Hobby h : person.getHobby()) {
             this.hobbies.add(new HobbyDTO(h));
         }
-        this.streetName = person.getAddress().getStreet();
-        this.streetAdditionalInfo = person.getAddress().getAdditionalInfo();
+        this.address = new AddressDTO(person.getAddress());
     }
 
-    public Person getEntity(Function f){
+    public Person getEntity(){
         Person person = new Person(this.getEmail(), this.getFirstName(), this.getLastName(), this.getPassword());
         if(this.id != 0){
             person.setId(this.id);
         }
         Set<Phone> phones = new LinkedHashSet<>();
-        for(String s : this.getPhone()){
-            phones.add(getPhoneObject(s));
+        for(PhoneDTO p : this.getPhone()){
+            Phone ph = new Phone(p.getNumber());
+            if(p.getId() != null) {
+                ph.setId(p.getId());
+            }
+            phones.add(ph);
         }
-        person.setPhone(this.getPhone());
+        person.setPhone(phones);
+        person.setAddress(new Address(this.address.getStreet(), this.address.getAdditionalInfo(), this.cityInfo_id));
+        Set<Hobby> hobbies = new LinkedHashSet<>();
+        for(HobbyDTO h : this.getHobbies()){
+            Hobby hd = new Hobby(h.getHobby_name(), h.getHobby_wikiLink(), h.getHobby_category(), h.getHobby_type());
+            if(h.getId() != null){
+                hd.setId(h.getId());
+            }
+            hobbies.add(hd);
+        }
+        person.setHobby(hobbies);
+
+        return person;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getFirstName() {
         return firstName;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public String getLastName() {
         return lastName;
     }
-    
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public String getPassword() {
         return password;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public Set<String> getPhone() {
+
+    public Set<PhoneDTO> getPhone() {
         return phone;
     }
-    
-    public void setPhone(Set<String> phone) {
+
+    public void setPhone(Set<PhoneDTO> phone) {
         this.phone = phone;
     }
-    
-//    public Map<String, String> getHobbies() {
-//        return hobbies;
-//    }
-//
-//    public void setHobbies(Map<String, String> hobbies) {
-//        this.hobbies = hobbies;
-//    }
-
 
     public Set<HobbyDTO> getHobbies() {
         return hobbies;
@@ -164,20 +168,12 @@ public class PersonDTO {
         this.hobbies = hobbies;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public AddressDTO getAddress() {
+        return address;
     }
-    
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-    
-    public String getStreetAdditionalInfo() {
-        return streetAdditionalInfo;
-    }
-    
-    public void setStreetAdditionalInfo(String streetAdditionalInfo) {
-        this.streetAdditionalInfo = streetAdditionalInfo;
+
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 
     public int getCityInfo_id() {
@@ -194,20 +190,5 @@ public class PersonDTO {
 
     public void setHobby_id(int hobby_id) {
         this.hobby_id = hobby_id;
-    }
-
-    @Override
-    public String toString() {
-        return "PersonDTO{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
-                ", phone=" + phone +
-                ", hobbies=" + hobbies +
-                ", streetName='" + streetName + '\'' +
-                ", streetAdditionalInfo='" + streetAdditionalInfo + '\'' +
-                '}';
     }
 }

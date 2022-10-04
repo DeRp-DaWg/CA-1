@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HobbyDTO {
+
+    private Long id;
     private String hobby_name;
 
     private String hobby_wikiLink;
@@ -12,7 +14,8 @@ public class HobbyDTO {
     private String hobby_category;
     private String hobby_type;
 
-    public HobbyDTO(String hobby_name, String hobby_wikiLink, String hobby_category, String hobby_type) {
+    public HobbyDTO(Long id, String hobby_name, String hobby_wikiLink, String hobby_category, String hobby_type) {
+        this.id = id;
         this.hobby_name = hobby_name;
         this.hobby_wikiLink = hobby_wikiLink;
         this.hobby_category = hobby_category;
@@ -26,11 +29,20 @@ public class HobbyDTO {
     }
     public HobbyDTO(Hobby hobby) {
         if(hobby != null) {
+            this.id = hobby.getId();
             this.hobby_name = hobby.getName();
             this.hobby_wikiLink = hobby.getWikiLink();
             this.hobby_category = hobby.getCategory();
             this.hobby_type = hobby.getType();
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getHobby_name(){return hobby_name; }

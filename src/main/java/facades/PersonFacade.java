@@ -6,12 +6,14 @@ import dtos.PersonDTO;
 import entities.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 //import errorhandling.RenameMeNotFoundException;
 import entities.Phone;
+import org.apache.commons.lang3.math.NumberUtils;
 import utils.EMF_Creator;
 
 /**
@@ -58,7 +60,7 @@ public class PersonFacade {
 //        for(Map.Entry<String, String> entry : personDTO.getHobbies().entrySet()) {
 //            hobbies.add(new Hobby(entry.getKey(), entry.getValue()));
 //        }
-        Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword(), personDTO.getHobby_id());
+        Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
         person.setPhone(phones);
         person.setAddress(address);
         for(Phone p : phones){
@@ -75,24 +77,63 @@ public class PersonFacade {
         } finally {
             em.close();
         }
-        return new PersonDTO(person, hobbies);
+        return new PersonDTO(person);
+    }
+
+    public HobbyDTO createHobby(HobbyDTO hobbyDTO){
+
+        Hobby hobby = new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type());
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(hobby);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new HobbyDTO(hobby);
+    }
+
+    public PersonDTO update(PersonDTO person) {
+//        if (person.getId() == 0)
+//            throw new IllegalArgumentException("No Parent can be updated when id is missing");
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        Person p = em.merge(person.getEntity()); //implement getEntity
+        em.getTransaction().commit();
+        em.close();
+        return new PersonDTO(p);
+    }
+
+    public PersonDTO delete(int id){
+        EntityManager em = getEntityManager();
+        Person p = em.find(Person.class, id);
+//        if (p == null)
+//            throw new EntityNotFoundException("Could not remove Parent with id: "+id);
+        em.getTransaction().begin();
+        em.remove(p);
+        em.getTransaction().commit();
+        em.close();
+        return new PersonDTO(p);
     }
     /* Returns and works with lists, because there is a chance that
      more people uses the same phone number (per example: a child and
      their parent) */
-    public List<PersonDTO> getByPhone(int phoneNumber) { //throws RenameMeNotFoundException {
+
+    public Phone getPhoneObject(String phoneNumber){
         EntityManager em = emf.createEntityManager();
-        String textNumber = "";
-        if(phoneNumber == 1){
-            textNumber = "67821902";
-        }
-        else {
-            textNumber = String.valueOf(phoneNumber);
-        }
+        TypedQuery<Phone> query = em.createQuery("SELECT p FROM Phone p WHERE p.number = :phoneNumber", Phone.class)
+                .setParameter("phoneNumber", phoneNumber);
+        Phone phone = query.getSingleResult();
+        return phone;
+    }
+    public List<PersonDTO> getByPhone(String phoneNumber) { //throws RenameMeNotFoundException {
+        EntityManager em = emf.createEntityManager();
+//        String textNumber = String.valueOf(phoneNumber);
 
 //        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phone t WHERE t.number = :phoneNumber", Person.class)
-                .setParameter("phoneNumber", textNumber);
+                .setParameter("phoneNumber", phoneNumber);
         List<Person> person = query.getResultList();
 //        Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
 //        for(HobbyDTO h : getHobbies(person.getHobby_id())){
@@ -111,6 +152,91 @@ public class PersonFacade {
 //        if (rm == null)
 //            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
+    }
+
+    public List<PersonDTO> getByHobby(String hobby) { //throws RenameMeNotFoundException {
+        EntityManager em = emf.createEntityManager();
+
+//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
+//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
+        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobbyName", Person.class)
+                .setParameter("hobbyName", hobby); //Change to selecting a person, when hobby is implemented under person
+        List<Person> persons = query.getResultList();
+        List<PersonDTO> personDTOS = new ArrayList<>();
+
+        for (Person p : persons) {
+//            personDTOS.add(new PersonDTO(p));
+        }
+//        if (rm == null)
+//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
+        return personDTOS;
+    }
+
+    public List<PersonDTO> getAllInCity(String city) { //throws RenameMeNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query;
+        // If true, a number is given
+        if(NumberUtils.isNumber(city)){
+            query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c WHERE c.zipCode = :zip", Person.class)
+                    .setParameter("zip", city);
+        }
+        else {
+            query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c WHERE c.city = :name", Person.class)
+                    .setParameter("name", city);
+        }
+        List<Person> persons = query.getResultList();
+        List<PersonDTO> personDTOS = new ArrayList<>();
+
+        for (Person p : persons) {
+//            personDTOS.add(new PersonDTO(p));
+        }
+//        if (rm == null)
+//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
+        return personDTOS;
+    }
+
+    public List<PersonDTO> getAllByHobbyCity(String city, String hobby) { //throws RenameMeNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query;
+        // If true, a number is given
+        if(NumberUtils.isNumber(city)){
+            query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c WHERE c.zipCode = :zip", Person.class)
+                    .setParameter("zip", city);
+        }
+        else {
+            query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c WHERE c.city = :name", Person.class)
+                    .setParameter("name", city);
+        }
+        List<Person> personsFromCity = query.getResultList();
+//        query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c JOIN p.hobby h WHERE c.city = :name AND h.name = :hobbyName", Person.class)
+//                .setParameter("name", city).setParameter("hobbyName", hobby);
+        //        query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
+        query = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobbyName", Person.class)
+                .setParameter("hobbyName", hobby);
+        List<Person> personsFromHobby = query.getResultList();
+        Set<Person> overlap = personsFromCity.stream().distinct().filter(personsFromHobby::contains).collect(Collectors.toSet()); //Make sure equals method is provided in Person entity
+        List<PersonDTO> personDTOS = new ArrayList<>();
+
+        for (Person p : overlap) {
+//            personDTOS.add(new PersonDTO(p));
+        }
+//        if (rm == null)
+//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
+        return personDTOS;
+    }
+
+    public List<CityInfoDTO> getAllZips() { //throws RenameMeNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<CityInfo> query = em.createQuery("SELECT c FROM CityInfo c", CityInfo.class);
+        List<CityInfo> citys = query.getResultList();
+        List<CityInfoDTO> cityDTOS = new ArrayList<>();
+
+        for (CityInfo c : citys) {
+            cityDTOS.add(new CityInfoDTO(c));
+        }
+//        if (rm == null)
+//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
+        return cityDTOS;
     }
 
     // Gets all persons with a given hobby xxxxx maybe

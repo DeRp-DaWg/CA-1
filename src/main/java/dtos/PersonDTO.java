@@ -10,13 +10,14 @@ import entities.Person;
 import entities.Phone;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  *
  * @author tha
  */
 public class PersonDTO {
-    private long id;
+    private Long id;
     private String email;
     private String firstName;
     private String lastName;
@@ -49,21 +50,21 @@ public class PersonDTO {
     }
 
     // ToDo change the List<List<>> to something smarter
-    public static List<PersonDTO> getDtos(List<Person> persons, List<List<HobbyDTO>> hobbies){
+    public static List<PersonDTO> getDtos(List<Person> persons){
         List<PersonDTO> personDTOs = new ArrayList();
         for(int i = 0; i < persons.size(); i++){
             Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
-            for(HobbyDTO h : hobbies.get(i)){
-                hobbyDTOSet.add(h);
-            }
-            personDTOs.add(new PersonDTO(persons.get(i), hobbyDTOSet));
+//            for(HobbyDTO h : hobbies.get(i)){
+//                hobbyDTOSet.add(h);
+//            }
+            personDTOs.add(new PersonDTO(persons.get(i)));
         }
 //      persons.forEach(person-> personDTOs.add(new PersonDTO(person)));
         return personDTOs;
     }
 
 
-    public PersonDTO(Person person, Set<HobbyDTO> hobbies) {
+    public PersonDTO(Person person) {
         if(person.getId() != null)
             this.id = person.getId();
         this.email = person.getEmail();
@@ -78,11 +79,34 @@ public class PersonDTO {
 //        for (Hobby hobby : person.getHobby()) {
 //            hobbies.put(hobby.getName(), hobby.getDescription());
 //        }
-        this.hobbies = hobbies;
+        this.hobbies = new LinkedHashSet<>();
+        for(Hobby h : person.getHobby()) {
+            this.hobbies.add(new HobbyDTO(h));
+        }
         this.streetName = person.getAddress().getStreet();
         this.streetAdditionalInfo = person.getAddress().getAdditionalInfo();
     }
-    
+
+    public Person getEntity(Function f){
+        Person person = new Person(this.getEmail(), this.getFirstName(), this.getLastName(), this.getPassword());
+        if(this.id != 0){
+            person.setId(this.id);
+        }
+        Set<Phone> phones = new LinkedHashSet<>();
+        for(String s : this.getPhone()){
+            phones.add(getPhoneObject(s));
+        }
+        person.setPhone(this.getPhone());
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return email;
     }

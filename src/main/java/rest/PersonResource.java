@@ -2,7 +2,11 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.CityInfoDTO;
+import dtos.HobbyDTO;
 import dtos.PersonDTO;
+import entities.Hobby;
+import entities.Person;
 import utils.EMF_Creator;
 import facades.PersonFacade;
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +30,7 @@ public class PersonResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAll() throws EntityNotFoundException {
         List<PersonDTO> p = new ArrayList<>(FACADE.getAll());
-        System.out.println(FACADE.getByPhone(1));
+//        System.out.println(FACADE.getByPhone(1));
         return Response.ok().entity(GSON.toJson(p)).build();
     }
 //    @Path("count")
@@ -39,23 +43,74 @@ public class PersonResource {
 //        return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
 //    }
 
-    // Waiting to be implemented - Claes
-//    @GET
-//    @Path("/{number}")
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public Response getByP(@PathParam("number") int pNumber) throws EntityNotFoundException {
-//        System.out.println("Hello");
-//        System.out.println(pNumber);
-//        PersonDTO p = FACADE.getByPhone(pNumber);
-//        return Response.ok().entity(GSON.toJson(p)).build();
-//    }
-
     @GET
     @Path("/phone/{number}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("number") int number) throws EntityNotFoundException {
+    public Response getById(@PathParam("number") String number) throws EntityNotFoundException {
         List<PersonDTO> p = new ArrayList<>(FACADE.getByPhone(number));
         return Response.ok().entity(GSON.toJson(p)).build();
+    }
+
+    @GET
+    @Path("/hobby/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getByHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
+        List<PersonDTO> p = new ArrayList<>(FACADE.getByHobby(hobby));
+        return Response.ok().entity(GSON.toJson(p)).build();
+    }
+
+    @GET
+    @Path("/hobby/amount/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAmountHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
+        int amount = new ArrayList<>(FACADE.getByHobby(hobby)).size();
+        String json = "The amount of people that has the hobby: " + hobby + " is: " + amount;
+        return Response.ok().entity(GSON.toJson(json)).build();
+    }
+
+    @GET
+    @Path("/zips")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllZips() throws EntityNotFoundException {
+        List<CityInfoDTO> c = new ArrayList<>(FACADE.getAllZips());
+        return Response.ok().entity(GSON.toJson(c)).build();
+    }
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response create(String content) {
+        PersonDTO p = GSON.fromJson(content, PersonDTO.class);
+        PersonDTO newP = FACADE.create(p);
+        return Response.ok().entity(GSON.toJson(newP)).build();
+    }
+
+    @PUT
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(@PathParam("id") int id, String content) throws EntityNotFoundException {
+        PersonDTO p = GSON.fromJson(content, PersonDTO.class);
+        p.setId(id); //Should be implemented
+        PersonDTO updated = FACADE.update(p);
+        return Response.ok().entity(GSON.toJson(updated)).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response delete(@PathParam("id") int id) throws EntityNotFoundException {
+        PersonDTO deleted = FACADE.delete(id);
+        return Response.ok().entity(GSON.toJson(deleted)).build();
+    }
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createHobby(String content) {
+        HobbyDTO h = GSON.fromJson(content, HobbyDTO.class);
+        HobbyDTO newH = FACADE.createHobby(h);
+        return Response.ok().entity(GSON.toJson(newH)).build();
     }
 
 //    @GET

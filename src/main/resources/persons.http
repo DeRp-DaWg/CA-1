@@ -2,6 +2,10 @@
 GET http://localhost:8080/devops_starter_war_exploded/api/person
 Accept: application/json
 
+###
+DELETE http://localhost:8080/devops_starter_war_exploded/api/person/2
+Content-Type: application/json
+
 ### Update new user
 PUT http://localhost:8080/devops_starter_war_exploded/api/person/2
 Accept: application/json

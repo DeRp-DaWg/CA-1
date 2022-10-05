@@ -85,12 +85,16 @@ public class PersonFacade {
             hobbies.add(getHobbies(l));
         }
         personDTO.setHobbies(hobbies);
+//        Set<Hobby> hobbySet = new LinkedHashSet<>();
+//        for(HobbyDTO h : hobbies){
+//            hobbySet.add(new Hobby(h.getHobby_name(), h.getHobby_wikiLink(), h.getHobby_category(), h.getHobby_type()));
+//        }
 //        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
 ////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
 //            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
 //        }
         Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
-
+//        person.setHobby(hobbySet);
 //        Person person = personDTO.getEntity();
 //                new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
 //        person.setPhone(phones);
@@ -120,13 +124,15 @@ public class PersonFacade {
 //            assignHobby(hobbyDTO.getId(), person);
 //        }
 //        assignCityInfo(personDTO.getCityInfo_id(), person.getId());
-        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
+        for(HobbyDTO h : personDTO.getHobbies()) {
 //            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
 //            person.addHobby(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-            assignHobby(hobbyDTO.getId(), person.getId());
+            assignHobby(h.getId(), person.getId());
         }
         assignCityInfo(personDTO.getCityInfo_id(), person.getId());
-        return new PersonDTO(person);
+        PersonDTO output = new PersonDTO(person);
+        output.setHobbies(personDTO.getHobbies());
+        return output;
     }
 
     public HobbyDTO createHobby(HobbyDTO hobbyDTO){

@@ -69,7 +69,7 @@ public class PersonResource {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response update(@PathParam("id") Long id, String content) throws EntityNotFoundException {
@@ -80,7 +80,7 @@ public class PersonResource {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response delete(@PathParam("id") int id) throws EntityNotFoundException {
         PersonDTO deleted = FACADE.delete(id);

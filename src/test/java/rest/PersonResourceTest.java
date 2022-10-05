@@ -1,11 +1,16 @@
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import dtos.CityInfoDTO;
 import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import entities.Address;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
+import facades.PersonFacade;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
@@ -13,7 +18,10 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 import io.restassured.parsing.Parser;
+
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.EntityManager;
@@ -23,6 +31,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import utils.HttpUtils;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
@@ -57,6 +66,7 @@ public class PersonResourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
+
     }
 
     @AfterAll
@@ -67,17 +77,28 @@ public class PersonResourceTest {
         EMF_Creator.endREST_TestWithDB();
         httpServer.shutdownNow();
     }
-
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
     //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        PersonFacade fe = PersonFacade.getFacadeExample(emf);
         hobby1 = new Hobby("3D-udskrivning","https://en.wikipedia.org/wiki/3D_printing","Generel","Indendørs");
         hobby2 = new Hobby("Akrobatik","https://en.wikipedia.org/wiki/Acrobatics","Generel","Indendørs");
         hobby3 = new Hobby("Skuespil","https://en.wikipedia.org/wiki/Acting","Generel","Indendørs");
         hobby4 = new Hobby("Amatørradio","https://en.wikipedia.org/wiki/Amateur_radio","Generel","Indendørs");
         hobby5 = new Hobby("Animation","https://en.wikipedia.org/wiki/Animation","Generel","Indendørs");
+
+        String json = HttpUtils.fetchAPIData("https://api.dataforsyningen.dk/postnumre");
+        Type collectionType = new TypeToken<Collection<CityInfoDTO>>(){}.getType();
+        Collection<CityInfoDTO> ZipDTO = gson.fromJson(json, collectionType);
+
+        for (CityInfoDTO dto : ZipDTO) {
+            //System.out.println("Name: " + dto.getnavn() + " Zip: " + dto.getNr());
+            fe.insertCityInfo(new CityInfoDTO(dto.getnavn(), dto.getNr()));
+        }
+
         Set<Phone> hansPhones = new HashSet<>();
         hansPhones.add(new Phone("12345678"));
         hansPhones.add(new Phone("23456789"));
@@ -102,7 +123,11 @@ public class PersonResourceTest {
         p2.setAddress(new Address("Jensstreet 2", ""));
         try {
             em.getTransaction().begin();
-//            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.persist(hobby1);
             em.persist(hobby2);
             em.persist(hobby3);

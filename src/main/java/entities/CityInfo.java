@@ -1,12 +1,14 @@
 package entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "cityinfo")
-public class CityInfo { // zipcode: 2100, city: Østerbro
+@NamedQuery(name = "CityInfo.deleteAllRows" , query = "DELETE from CityInfo ")
+public class CityInfo implements Serializable { // zipcode: 2100, city: Østerbro
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

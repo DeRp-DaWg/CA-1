@@ -67,6 +67,17 @@ public class PersonResourceTest {
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
 
+
+        PersonFacade fe = PersonFacade.getFacadeExample(emf);
+
+        String json = HttpUtils.fetchAPIData("https://api.dataforsyningen.dk/postnumre");
+        Type collectionType = new TypeToken<Collection<CityInfoDTO>>(){}.getType();
+        Collection<CityInfoDTO> ZipDTO = gson.fromJson(json, collectionType);
+
+        for (CityInfoDTO dto : ZipDTO) {
+            //System.out.println("Name: " + dto.getnavn() + " Zip: " + dto.getNr());
+            fe.insertCityInfo(new CityInfoDTO(dto.getnavn(), dto.getNr()));
+        }
     }
 
     @AfterAll
@@ -83,21 +94,11 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        PersonFacade fe = PersonFacade.getFacadeExample(emf);
         hobby1 = new Hobby("3D-udskrivning","https://en.wikipedia.org/wiki/3D_printing","Generel","Indendørs");
         hobby2 = new Hobby("Akrobatik","https://en.wikipedia.org/wiki/Acrobatics","Generel","Indendørs");
         hobby3 = new Hobby("Skuespil","https://en.wikipedia.org/wiki/Acting","Generel","Indendørs");
         hobby4 = new Hobby("Amatørradio","https://en.wikipedia.org/wiki/Amateur_radio","Generel","Indendørs");
         hobby5 = new Hobby("Animation","https://en.wikipedia.org/wiki/Animation","Generel","Indendørs");
-
-        String json = HttpUtils.fetchAPIData("https://api.dataforsyningen.dk/postnumre");
-        Type collectionType = new TypeToken<Collection<CityInfoDTO>>(){}.getType();
-        Collection<CityInfoDTO> ZipDTO = gson.fromJson(json, collectionType);
-
-        for (CityInfoDTO dto : ZipDTO) {
-            //System.out.println("Name: " + dto.getnavn() + " Zip: " + dto.getNr());
-            fe.insertCityInfo(new CityInfoDTO(dto.getnavn(), dto.getNr()));
-        }
 
         Set<Phone> hansPhones = new HashSet<>();
         hansPhones.add(new Phone("12345678"));
@@ -124,7 +125,6 @@ public class PersonResourceTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
-            em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();

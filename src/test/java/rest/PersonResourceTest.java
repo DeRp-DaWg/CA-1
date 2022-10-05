@@ -34,7 +34,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import utils.HttpUtils;
 
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 
 public class PersonResourceTest {
 

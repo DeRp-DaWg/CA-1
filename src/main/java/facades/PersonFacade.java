@@ -79,7 +79,12 @@ public class PersonFacade {
             phones.add(new Phone(p.getNumber()));
         }
         Address address = new Address(personDTO.getAddress().getStreet(), personDTO.getAddress().getAdditionalInfo());
-        Set<Hobby> hobbies = new LinkedHashSet<>();
+//        Set<Hobby> hobbies = new LinkedHashSet<>();
+        Set<HobbyDTO> hobbies = new LinkedHashSet<>();
+        for(long l : personDTO.getHobby_id()){
+            hobbies.add(getHobbies(l));
+        }
+        personDTO.setHobbies(hobbies);
 //        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
 ////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
 //            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
@@ -109,6 +114,12 @@ public class PersonFacade {
         } finally {
             em.close();
         }
+//        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
+////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
+////            person.addHobby(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
+//            assignHobby(hobbyDTO.getId(), person);
+//        }
+//        assignCityInfo(personDTO.getCityInfo_id(), person.getId());
         for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
 //            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
 //            person.addHobby(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
@@ -345,19 +356,19 @@ public class PersonFacade {
 
 
 
-        public List<HobbyDTO> getHobbies(long hobby_id) { //throws RenameMeNotFoundException {
+        public HobbyDTO getHobbies(long hobby_id) { //throws RenameMeNotFoundException {
             EntityManager em = emf.createEntityManager();
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.id = :idh", Hobby.class)
                     .setParameter("idh", hobby_id);
-            List<Hobby> hobbyList = query.getResultList();
-            List<HobbyDTO> hobbyDTOs = new ArrayList<>();
-            for (Hobby h : hobbyList) {
-                hobbyDTOs.add(new HobbyDTO(h));
-            }
+            Hobby hobby = query.getSingleResult();
+//            List<HobbyDTO> hobbyDTOs = new ArrayList<>();
+//            for (Hobby h : hobbyList) {
+//                hobbyDTOs.add(new HobbyDTO(h));
+//            }
             //Person person = em.find(Person.class, phoneNumber);
 //        if (rm == null)
 //            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
-            return hobbyDTOs;
+            return new HobbyDTO(hobby);
         }
 
             public CityInfoDTO insertCityInfo(CityInfoDTO cityInfoDTO){

@@ -6,34 +6,17 @@ Accept: application/json
 PUT http://localhost:8080/devops_starter_war_exploded/api/person/2
 Accept: application/json
 
+"address": {
+      "street": "Randersgade",
+      "additionalInfo": "2. th",
+      "cityInfoDTO": {
+        "nr": "København Ø",
+        "navn": "2100"
+      }
+    }
+
 ###
 POST http://localhost:8080/devops_starter_war_exploded/api/person
-Accept: application/json
+Content-Type: application/json
 
-{
-"email": "user3@mail.dk",
-"firstName": "Frederik",
-"lastName": "Schöltz",
-"password": "4321",
-"phone": [
-{
-"number": "72890131"
-}
-],
-"hobbies": [
-{
-"hobby_name": "3D-udskrivning",
-"hobby_wikiLink": "https://en.wikipedia.org/wiki/3D_printing",
-"hobby_category": "Generel",
-"hobby_type": "Indendørs"
-}
-],
-"address": {
-"street": "Poul Henningsens vej",
-"additionalInfo": "3. mf",
-"cityInfoDTO": {
-"nr": "Kokkedal",
-"navn": "2980"
-}
-}
-}
+{"id": null, "email": "user3@mail.dk", "firstName": "Frederik", "lastName": "Schöltz", "password": "4321", "phone": [{"number": "72890131"}], "hobbies": [{}], "address": {"street": "Poul Henningsens vej", "additionalInfo": "3. mf", "cityInfoDTO": {}}, "cityInfo_id": 489, "hobby_id": [1]}

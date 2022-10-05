@@ -210,7 +210,7 @@ public class PersonResourceTest {
                 .get("/person/zips").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("", equalTo(""));
+                .body(hasItem(allOf(hasProperty("nr", equalTo("København K")),hasProperty("navn",equalTo("1052")))));
     }
     
     @Test

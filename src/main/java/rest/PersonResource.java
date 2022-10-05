@@ -60,7 +60,7 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/{hobby}")
+    @Path("/hobby/{hobby}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getByHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
         List<PersonDTO> p = new ArrayList<>(FACADE.getByHobby(hobby));
@@ -68,7 +68,7 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/amount/{hobby}")
+    @Path("/hobby/amount/{hobby}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAmountHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
         int amount = new ArrayList<>(FACADE.getByHobby(hobby)).size();
@@ -102,6 +102,16 @@ public class PersonResource {
     public Response delete(@PathParam("id") int id) throws EntityNotFoundException {
         PersonDTO deleted = FACADE.delete(id);
         return Response.ok().entity(GSON.toJson(deleted)).build();
+    }
+    
+    @POST
+    @Path("/hobby")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createHobby(String content) {
+        HobbyDTO h = GSON.fromJson(content, HobbyDTO.class);
+        HobbyDTO newH = FACADE.createHobby(h);
+        return Response.ok().entity(GSON.toJson(newH)).build();
     }
 
 //    @GET

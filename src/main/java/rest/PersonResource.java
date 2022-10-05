@@ -59,6 +59,23 @@ public class PersonResource {
         return Response.ok().entity(GSON.toJson(c)).build();
     }
 
+    @GET
+    @Path("/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getByHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
+        List<PersonDTO> p = new ArrayList<>(FACADE.getByHobby(hobby));
+        return Response.ok().entity(GSON.toJson(p)).build();
+    }
+
+    @GET
+    @Path("/amount/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAmountHobby(@PathParam("hobby") String hobby) throws EntityNotFoundException {
+        int amount = new ArrayList<>(FACADE.getByHobby(hobby)).size();
+        String json = "The amount of people that has the hobby: " + hobby + " is: " + amount;
+        return Response.ok().entity(GSON.toJson(json)).build();
+    }
+
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})

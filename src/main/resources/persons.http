@@ -1,0 +1,39 @@
+###
+GET http://localhost:8080/devops_starter_war_exploded/api/person
+Accept: application/json
+
+### Update new user
+PUT http://localhost:8080/devops_starter_war_exploded/api/person/2
+Accept: application/json
+
+###
+POST http://localhost:8080/devops_starter_war_exploded/api/person
+Accept: application/json
+
+{
+"email": "user3@mail.dk",
+"firstName": "Frederik",
+"lastName": "Schöltz",
+"password": "4321",
+"phone": [
+{
+"number": "72890131"
+}
+],
+"hobbies": [
+{
+"hobby_name": "3D-udskrivning",
+"hobby_wikiLink": "https://en.wikipedia.org/wiki/3D_printing",
+"hobby_category": "Generel",
+"hobby_type": "Indendørs"
+}
+],
+"address": {
+"street": "Poul Henningsens vej",
+"additionalInfo": "3. mf",
+"cityInfoDTO": {
+"nr": "Kokkedal",
+"navn": "2980"
+}
+}
+}

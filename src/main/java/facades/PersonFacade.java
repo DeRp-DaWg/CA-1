@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
-//import errorhandling.RenameMeNotFoundException;
 import entities.Phone;
 import org.apache.commons.lang3.math.NumberUtils;
 import utils.EMF_Creator;
@@ -53,7 +52,6 @@ public class PersonFacade {
         Person person = em.find(Person.class, person_id);
         em.getTransaction().begin();
         cityInfo.addAddress(person.getAddress());
-//        person.getAddress().assingCityinfo(cityInfo);
         em.getTransaction().commit();
         em.close();
         return person;
@@ -63,10 +61,6 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
         Hobby hobby = em.find(Hobby.class, hobbyId);
         Person person = em.find(Person.class, person_id);
-//        Set<Hobby> hobbies = new LinkedHashSet<>();
-//        for(Long l : hobbyId){
-//            hobbies.add(em.find(Hobby.class, l));
-//        }
         em.getTransaction().begin();
         hobby.addPerson(person);
         em.getTransaction().commit();
@@ -79,37 +73,16 @@ public class PersonFacade {
             phones.add(new Phone(p.getNumber()));
         }
         Address address = new Address(personDTO.getAddress().getStreet(), personDTO.getAddress().getAdditionalInfo());
-//        Set<Hobby> hobbies = new LinkedHashSet<>();
         Set<HobbyDTO> hobbies = new LinkedHashSet<>();
         for(long l : personDTO.getHobby_id()){
             hobbies.add(getHobbies(l));
         }
         personDTO.setHobbies(hobbies);
-//        Set<Hobby> hobbySet = new LinkedHashSet<>();
-//        for(HobbyDTO h : hobbies){
-//            hobbySet.add(new Hobby(h.getHobby_name(), h.getHobby_wikiLink(), h.getHobby_category(), h.getHobby_type()));
-//        }
-//        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
-////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-//            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-//        }
         Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
-//        person.setHobby(hobbySet);
-//        Person person = personDTO.getEntity();
-//                new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName(), personDTO.getPassword());
-//        person.setPhone(phones);
-//        person.addPhone(phones);
         address.addPerson(person);
-
-//        person.addHobby(hobbies);
         for(Phone p : phones){
             person.addPhone(p);
         }
-//        person = assignCityInfo(personDTO.getCityInfo_id(), person);
-//        person = assignHobby(personDTO.getHobby_id(), person);
-        // Phone phone = new Phone(number, );
-        // Address address = new Address(street, info, CityInfo);
-        // Hobby hobby = new Hobby(name, desc);
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
@@ -118,15 +91,7 @@ public class PersonFacade {
         } finally {
             em.close();
         }
-//        for(HobbyDTO hobbyDTO : personDTO.getHobbies()) {
-////            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-////            person.addHobby(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-//            assignHobby(hobbyDTO.getId(), person);
-//        }
-//        assignCityInfo(personDTO.getCityInfo_id(), person.getId());
         for(HobbyDTO h : personDTO.getHobbies()) {
-//            hobbies.add(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
-//            person.addHobby(new Hobby(hobbyDTO.getHobby_name(), hobbyDTO.getHobby_wikiLink(), hobbyDTO.getHobby_category(), hobbyDTO.getHobby_type()));
             assignHobby(h.getId(), person.getId());
         }
         assignCityInfo(personDTO.getCityInfo_id(), person.getId());
@@ -150,8 +115,6 @@ public class PersonFacade {
     }
 
     public PersonDTO update(PersonDTO person) {
-//        if (person.getId() == 0)
-//            throw new IllegalArgumentException("No Parent can be updated when id is missing");
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
         Person p = em.merge(person.getEntity()); //implement getEntity
@@ -163,8 +126,6 @@ public class PersonFacade {
     public PersonDTO delete(int id){
         EntityManager em = getEntityManager();
         Person p = em.find(Person.class, id);
-//        if (p == null)
-//            throw new EntityNotFoundException("Could not remove Parent with id: "+id);
         em.getTransaction().begin();
         em.remove(p);
         em.getTransaction().commit();
@@ -184,35 +145,19 @@ public class PersonFacade {
     }
     public List<PersonDTO> getByPhone(String phoneNumber) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
-//        String textNumber = String.valueOf(phoneNumber);
-
-//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phone t WHERE t.number = :phoneNumber", Person.class)
                 .setParameter("phoneNumber", phoneNumber);
         List<Person> person = query.getResultList();
-//        Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
-//        for(HobbyDTO h : getHobbies(person.getHobby_id())){
-//            hobbyDTOSet.add(h);
-//        }
-//        PersonDTO personDTO = new PersonDTO(person, hobbyDTOSet);
         List<PersonDTO> personDTOS = new ArrayList<>();
         for (Person p : person) {
-//            Set<HobbyDTO> hobbyDTOSet = new LinkedHashSet<>();
-//            for(HobbyDTO h : getHobbies(p.getHobby_id())){
-//                hobbyDTOSet.add(h);
-//            }
             personDTOS.add(new PersonDTO(p));
         }
-        //Person person = em.find(Person.class, phoneNumber);
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
     }
 
     public List<PersonDTO> getByHobby(String hobby) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
 
-//        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.phone = : phoneNumber", Person.class)
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
                 .setParameter("hobbyName", hobby);
         List<Person> persons = query.getResultList();
@@ -221,8 +166,6 @@ public class PersonFacade {
         for (Person p : persons) {
             personDTOS.add(new PersonDTO(p));
         }
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
     }
 
@@ -241,11 +184,6 @@ public class PersonFacade {
         List<Person> persons = query.getResultList();
         List<PersonDTO> personDTOS = new ArrayList<>();
 
-        for (Person p : persons) {
-//            personDTOS.add(new PersonDTO(p));
-        }
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
     }
 
@@ -262,20 +200,12 @@ public class PersonFacade {
                     .setParameter("name", city);
         }
         List<Person> personsFromCity = query.getResultList();
-//        query = em.createQuery("SELECT p FROM Person p JOIN p.address.cityInfo c JOIN p.hobby h WHERE c.city = :name AND h.name = :hobbyName", Person.class)
-//                .setParameter("name", city).setParameter("hobbyName", hobby);
-        //        query = em.createQuery("SELECT p FROM Person p JOIN p.hobby h WHERE h.name = :hobbyName", Person.class)
         query = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :hobbyName", Person.class)
                 .setParameter("hobbyName", hobby);
         List<Person> personsFromHobby = query.getResultList();
         Set<Person> overlap = personsFromCity.stream().distinct().filter(personsFromHobby::contains).collect(Collectors.toSet()); //Make sure equals method is provided in Person entity
         List<PersonDTO> personDTOS = new ArrayList<>();
 
-        for (Person p : overlap) {
-//            personDTOS.add(new PersonDTO(p));
-        }
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return personDTOS;
     }
 
@@ -288,36 +218,8 @@ public class PersonFacade {
         for (CityInfo c : citys) {
             cityDTOS.add(new CityInfoDTO(c));
         }
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
         return cityDTOS;
     }
-
-    // Gets all persons with a given hobby xxxxx maybe
-//    public List<PersonDTO> getByHobby(String hobby){
-//        EntityManager em = emf.createEntityManager();
-//        TypedQuery<Person> query = em.createQuery("SELECT h FROM Hobby h WHERE h.hobby = :hobby", Person.class)
-//                .setParameter("hobby", hobby);
-//        List<Person> persons = query.getResultList();
-//        List<PersonDTO> personDTOS = new ArrayList<>();
-//        for (Person h : persons){
-//            personDTOS.add(new PersonDTO(h));
-//        }
-//        return personDTOS;
-//    }
-
-    //Get all persons living in a given city
-//    public List<PersonDTO> getByAddress(String address){
-//        EntityManager em = emf.createEntityManager();
-//        TypedQuery<Person> query = em.createQuery("SELECT a FROM Address a WHERE a.adress = :adress", Person.class)
-//                .setParameter("adress", address);
-//        List<Person> persons = query.getResultList();
-//        List<PersonDTO> personDTOS = new ArrayList<>();
-//        for (Person a : persons){
-//            personDTOS.add(new PersonDTO(a));
-//        }
-//        return personDTOS;
-//    }
 
     //TODO Remove/Change this before use
     public long getRenameMeCount(){
@@ -334,10 +236,6 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT r FROM Person r", Person.class);
         List<Person> rms = query.getResultList();
-//        List<List<HobbyDTO>> hobbyList = new ArrayList<>();
-//        for(Person p : rms){
-//            hobbyList.add(getHobbies(p.getHobby_id()));
-//        }
         return PersonDTO.getDtos(rms);
     }
     
@@ -367,13 +265,6 @@ public class PersonFacade {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.id = :idh", Hobby.class)
                     .setParameter("idh", hobby_id);
             Hobby hobby = query.getSingleResult();
-//            List<HobbyDTO> hobbyDTOs = new ArrayList<>();
-//            for (Hobby h : hobbyList) {
-//                hobbyDTOs.add(new HobbyDTO(h));
-//            }
-            //Person person = em.find(Person.class, phoneNumber);
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
             return new HobbyDTO(hobby);
         }
 
@@ -401,9 +292,6 @@ public class PersonFacade {
             for (CityInfo c : cityInfoList) {
                 cityInfoDTOs.add(new CityInfoDTO(c));
             }
-            //Person person = em.find(Person.class, phoneNumber);
-//        if (rm == null)
-//            throw new RenameMeNotFoundException("The Person entity with ID: "+id+" Was not found");
             return cityInfoDTOs;
         }
 }

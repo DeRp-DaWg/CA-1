@@ -289,11 +289,11 @@ public class PersonResourceTest {
     public void testGetHobby() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/hobby/Gymnastik").then()
+                .get("/hobby/Akrobatik").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("name", equalTo("Gymnastik"))
-                .body("wikiLink", equalTo("https://en.wikipedia.org/wiki/Gymnastics"))
+                .body("name", equalTo("Akrobatik"))
+                .body("wikiLink", equalTo("https://en.wikipedia.org/wiki/Acrobatics"))
                 .body("category", equalTo("Generel"))
                 .body("type", equalTo("Indendørs"));
     }

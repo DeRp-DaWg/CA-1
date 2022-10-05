@@ -25,7 +25,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 //Uncomment the line below, to temporarily disable this test
-@Disabled
+//@Disabled
 
 public class PersonResourceTest {
 
@@ -41,6 +41,7 @@ public class PersonResourceTest {
 
     static HttpServer startServer() {
         ResourceConfig rc = ResourceConfig.forApplication(new ApplicationConfig());
+        System.out.println("Base-URI: "+BASE_URI);
         return GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
     }
 
@@ -52,6 +53,7 @@ public class PersonResourceTest {
 
         httpServer = startServer();
         //Setup RestAssured
+        System.out.println("SERVER_URL: "+SERVER_URL);
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;

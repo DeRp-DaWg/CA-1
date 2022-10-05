@@ -13,8 +13,8 @@ public class Phone implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="PERSON_ID")
+    @ManyToOne
+    @JoinColumn(name="PERSON_ID", referencedColumnName = "id")
     private Person person;
     
     public Phone() {
@@ -48,10 +48,10 @@ public class Phone implements Serializable {
         this.person = person;
     }
 
-    public void assignPersons(Person person){
-        if(person != null){
-            this.person = person;
-            person.getPhone().add(this); // bi-directional: sætter student ind i Hashset hos semester
-        }
-    }
+//    public void assignPersons(Person person){
+//        if(person != null){
+//            this.person = person;
+//            person.getPhone().add(this); // bi-directional: sætter student ind i Hashset hos semester
+//        }
+//    }
 }

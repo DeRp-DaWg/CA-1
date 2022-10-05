@@ -123,7 +123,7 @@ public class Populator {
         Set<Long> hobbyIDs = new LinkedHashSet<>();
         hobbyIDs.add(1L);
         AddressDTO addressDTO = new AddressDTO(new Address("Østerbrogade", "2. th"));
-        fe.create(new PersonDTO(null, "user@mail.dk", "Claes", "Heise", "1234", phoneDTOS, hobbies, addressDTO,1L, hobbyIDs));
+        fe.create(new PersonDTO(1L, "user@mail.dk", "Claes", "Heise", "1234", phoneDTOS, hobbies, addressDTO,1L, hobbyIDs));
 //        phones = new LinkedHashSet<>();
 //        phones.add("27834091");
         //Map<String, String> hobbies = new HashMap<>();
@@ -137,7 +137,7 @@ public class Populator {
         hobbyIDs = new LinkedHashSet<>();
         hobbyIDs.add(2L);
         addressDTO = new AddressDTO(new Address("Finsensvej", "5. tv"));
-        fe.create(new PersonDTO(null, "user2@mail.dk", "Troels", "Sandfer", "1234", phoneDTOS, hobbies, addressDTO, 5L, hobbyIDs));
+        fe.create(new PersonDTO(2L, "user2@mail.dk", "Troels", "Sandfer", "1234", phoneDTOS, hobbies, addressDTO, 5L, hobbyIDs));
 //        System.out.println(fe.getByPhone(67821902));
     }
     

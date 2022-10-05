@@ -29,12 +29,11 @@ public class Address implements Serializable {
 //    @JoinColumn(name = "Cityinfo")
 
 
-    @OneToMany
-    @JoinColumn(name="")
-    private Set<Person> person = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "address", cascade = CascadeType.PERSIST)
+    private Set<Person> persons = new LinkedHashSet<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "city_info_id")
+    @ManyToOne
+    @JoinColumn(name = "city_info_id", referencedColumnName = "id")
     private CityInfo cityInfo;
 
 //    @ManyToOne
@@ -66,12 +65,12 @@ public class Address implements Serializable {
         this.additionalInfo = additionalInfo;
 //        this.cityinfo_id = cityinfo_id;
     }
-    public void assingCityinfo(CityInfo cityInfo){
-        if(cityInfo != null){
-            this.cityInfo = cityInfo;
-            cityInfo.getAddresses().add(this);
-        }
-    }
+//    public void assingCityinfo(CityInfo cityInfo){
+//        if(cityInfo != null){
+//            this.cityInfo = cityInfo;
+//            cityInfo.getAddresses().add(this);
+//        }
+//    }
     
     public Long getId() {
         return id;
@@ -95,5 +94,10 @@ public class Address implements Serializable {
     
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
+    }
+
+    public void addPerson(Person person){
+        this.persons.add(person);
+        person.setAddress(this);
     }
 }

@@ -24,7 +24,12 @@ import java.util.Set;
 
         private String type;
 
-        @ManyToMany(mappedBy = "hobby")
+        @ManyToMany()
+        @JoinTable(
+                name = "personhobby",
+                joinColumns = @JoinColumn(name = "hobby_id"),
+                inverseJoinColumns = @JoinColumn(name = "person_id")
+        )
         private Set<Person> person = new LinkedHashSet<>();
 
         public Hobby() {
@@ -75,5 +80,16 @@ import java.util.Set;
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Set<Person> getPerson() {
+        return person;
+    }
+
+    public void setPerson(Set<Person> person) {
+        this.person = person;
+    }
+
+    public void addPerson(Person person){this.person.add(person);
     }
 }

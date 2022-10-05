@@ -21,9 +21,9 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Address address;
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "person")
     @JoinTable(
             name = "personhobby",
             joinColumns = @JoinColumn(name = "person_id"),
@@ -91,14 +91,6 @@ public class Person implements Serializable {
         this.address = address;
     }
     
-//    public Set<Hobby> getHobby() {
-//        return hobby;
-//    }
-//
-//    public void setHobby(Set<Hobby> hobby) {
-//        this.hobby = hobby;
-//    }
-    
     public Set<Phone> getPhone() {
         return phone;
     }
@@ -112,17 +104,24 @@ public class Person implements Serializable {
     }
     
     public void setHobby(Set<Hobby> hobby) {
+
         this.hobby = hobby;
     }
 
-    public Set<Hobby> addHobby(Hobby hobby2) {
-        Set<Hobby> hobbies = this.hobby;
-        hobbies.add(hobby2);
-        return hobbies;
+//    public void addHobby(Hobby hobbies) {
+//        hobby.add(hobbies);
+//    }
+//
+//    public Set<Hobby> removeHobby(Hobby hobby2) {
+//        Set<Hobby> hobbies = this.hobby;
+//        hobbies.remove(hobby2);
+//        return hobbies;
+//    }
+
+    public void addPhone(Phone phone){
+        this.phone.add(phone);
+        phone.setPerson(this);
     }
-    public Set<Hobby> removeHobby(Hobby hobby2) {
-        Set<Hobby> hobbies = this.hobby;
-        hobbies.remove(hobby2);
-        return hobbies;
-    }
+
+
 }

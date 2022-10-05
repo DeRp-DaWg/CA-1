@@ -104,14 +104,14 @@ public class PersonResource {
         return Response.ok().entity(GSON.toJson(deleted)).build();
     }
 
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response createHobby(String content) {
-        HobbyDTO h = GSON.fromJson(content, HobbyDTO.class);
-        HobbyDTO newH = FACADE.createHobby(h);
-        return Response.ok().entity(GSON.toJson(newH)).build();
-    }
+//    @POST
+//    @Produces({MediaType.APPLICATION_JSON})
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    public Response createHobby(String content) {
+//        HobbyDTO h = GSON.fromJson(content, HobbyDTO.class);
+//        HobbyDTO newH = FACADE.createHobby(h);
+//        return Response.ok().entity(GSON.toJson(newH)).build();
+//    }
 
 //    @GET
 //    @Path("/phone")

@@ -62,19 +62,23 @@ public class PersonDTO {
 
 
     public PersonDTO(Person person) {
-        if(person.getId() != null)
+        if(person.getId() != null) {
             this.id = person.getId();
+        }
         this.email = person.getEmail();
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.password = person.getPassword();
+        Set<PhoneDTO> phones = new LinkedHashSet<>();
+        for(Phone p : person.getPhone()){
+            phones.add(new PhoneDTO(p));
+        }
+        this.phone = phones;
 //        Set<PhoneDTO> phones = new LinkedHashSet<>();
-//        for(Phone p : person.getPhone()){
-//            phones.add(new PhoneDTO(p));
-//        }
-//        this.phone = phones;
-        PhoneDTO phoneDTO = new PhoneDTO(person.getPhone().);
-        this.phone = ;
+//        phones.add(new PhoneDTO());
+//        this.phone = phones; //ToDo change this
+//        PhoneDTO phoneDTO = new PhoneDTO(person.getPhone().);
+//        this.phone = ;
 //        hobbies = new HashMap<>();
 //        for (Hobby hobby : person.getHobby()) {
 //            hobbies.put(hobby.getName(), hobby.getDescription());

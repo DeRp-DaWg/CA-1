@@ -21,10 +21,10 @@ public class PhoneDTO {
 
     public PhoneDTO(Phone phone) {
         if(phone != null) {
-            this.id = phone.getId();
+            if(phone.getId() != null) {
+                this.id = phone.getId();
+            }
             this.number = phone.getNumber();
-            this.person = new PersonDTO(phone.getPerson());
-
         }
     }
 

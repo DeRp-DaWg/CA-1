@@ -32,6 +32,8 @@ public class PersonResourceTest {
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static Person p1, p2;
+    
+    private static Hobby hobby1, hobby2, hobby3, hobby4, hobby5;
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -69,12 +71,17 @@ public class PersonResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        hobby1 = new Hobby("3D-udskrivning","https://en.wikipedia.org/wiki/3D_printing","Generel","Indendørs");
+        hobby2 = new Hobby("Akrobatik","https://en.wikipedia.org/wiki/Acrobatics","Generel","Indendørs");
+        hobby3 = new Hobby("Skuespil","https://en.wikipedia.org/wiki/Acting","Generel","Indendørs");
+        hobby4 = new Hobby("Amatørradio","https://en.wikipedia.org/wiki/Amateur_radio","Generel","Indendørs");
+        hobby5 = new Hobby("Animation","https://en.wikipedia.org/wiki/Animation","Generel","Indendørs");
         Set<Phone> hansPhones = new HashSet<>();
         hansPhones.add(new Phone("12345678"));
         hansPhones.add(new Phone("23456789"));
         Set<Hobby> hansHobbies = new HashSet<>();
-        hansHobbies.add(new Hobby("Skuespil", "", "", ""));
-        hansHobbies.add(new Hobby("Amatørradio", "", "", ""));
+        hansHobbies.add(hobby3);
+        hansHobbies.add(hobby4);
         p1 = new Person("HansHansen@fake.mail", "Hans", "Hansen", "1234");
         p1.setPhone(hansPhones);
         p1.setHobby(hansHobbies);
@@ -84,9 +91,9 @@ public class PersonResourceTest {
         jensPhones.add(new Phone("87654321"));
         jensPhones.add(new Phone("98765432"));
         Set<Hobby> jensHobbies = new HashSet<>();
-        jensHobbies.add(new Hobby("3D-udskrivning", "", "", ""));
-        jensHobbies.add(new Hobby("Amatørradio", "", "", ""));
-        jensHobbies.add(new Hobby("Animation", "", "", ""));
+        jensHobbies.add(hobby1);
+        jensHobbies.add(hobby4);
+        jensHobbies.add(hobby5);
         p2 = new Person("JensJensen@fake.mail", "Jens", "Jensen", "1234");
         p2.setPhone(jensPhones);
         p2.setHobby(jensHobbies);
@@ -94,6 +101,11 @@ public class PersonResourceTest {
         try {
             em.getTransaction().begin();
 //            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
+            em.persist(hobby1);
+            em.persist(hobby2);
+            em.persist(hobby3);
+            em.persist(hobby4);
+            em.persist(hobby5);
             em.persist(p1);
             em.persist(p2);
             em.getTransaction().commit();
@@ -178,7 +190,7 @@ public class PersonResourceTest {
         newPerson.setId(null);
         given()
                 .contentType("application/json")
-                .body(p1)
+                .body(newPerson)
                 .post("/person").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode());
@@ -186,8 +198,7 @@ public class PersonResourceTest {
                 .contentType("application/json")
                 .get().then()
                 .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("", equalTo(""));
+                .statusCode(HttpStatus.OK_200.getStatusCode());
     }
     
     @Test
@@ -202,5 +213,59 @@ public class PersonResourceTest {
                 .get("/person/1").then()
                 .assertThat()
                 .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode());
+    }
+    
+    @Test
+    public void testUpdatePerson() throws Exception {
+        PersonDTO changedPerson = new PersonDTO(p1);
+        changedPerson.setFirstName("Peter");
+        changedPerson.setLastName("Petersen");
+        given()
+                .contentType("application/json")
+                .body(changedPerson)
+                .put("/person/1").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
+        given()
+                .contentType("application/json")
+                .get("/person/1").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("firstName", equalTo("Peter"))
+                .body("lastName", equalTo("Petersen"));
+    }
+    
+    @Test
+    public void testCreateHobby() throws Exception {
+        Hobby hobby = new Hobby("Gymnastik", "https://en.wikipedia.org/wiki/Gymnastics", "Generel", "Indendørs");
+        HobbyDTO hobbyDTO = new HobbyDTO(hobby);
+        given()
+                .contentType("application/json")
+                .body(hobbyDTO)
+                .post("/hobby").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode());
+        given()
+                .contentType("application/json")
+                .get("/hobby/Gymnastik").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("name", equalTo("Gymnastik"))
+                .body("wikiLink", equalTo("https://en.wikipedia.org/wiki/Gymnastics"))
+                .body("category", equalTo("Generel"))
+                .body("type", equalTo("Indendørs"));
+    }
+    
+    @Test
+    public void testGetHobby() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/hobby/Gymnastik").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("name", equalTo("Gymnastik"))
+                .body("wikiLink", equalTo("https://en.wikipedia.org/wiki/Gymnastics"))
+                .body("category", equalTo("Generel"))
+                .body("type", equalTo("Indendørs"));
     }
 }

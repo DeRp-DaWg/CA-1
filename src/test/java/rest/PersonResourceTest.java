@@ -124,10 +124,12 @@ public class PersonResourceTest {
         p2.setAddress(new Address("Jensstreet 2", ""));
         try {
             em.getTransaction().begin();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
             em.persist(hobby1);
             em.persist(hobby2);
             em.persist(hobby3);

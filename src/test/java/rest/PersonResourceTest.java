@@ -146,7 +146,7 @@ public class PersonResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/").then().statusCode(200);
+        given().when().get("/api").then().statusCode(200);
     }
     
     @Test

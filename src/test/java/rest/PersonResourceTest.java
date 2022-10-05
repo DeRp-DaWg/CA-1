@@ -25,8 +25,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 //Uncomment the line below, to temporarily disable this test
-@Disabled
-
 public class PersonResourceTest {
 
     private static final int SERVER_PORT = 7777;
@@ -100,7 +98,11 @@ public class PersonResourceTest {
         p2.setAddress(new Address("Jensstreet 2", ""));
         try {
             em.getTransaction().begin();
-//            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.persist(hobby1);
             em.persist(hobby2);
             em.persist(hobby3);
